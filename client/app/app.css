@@ -2,7 +2,6 @@
 /**
  * Bootstrap Fonts
  */
-
 @font-face {
     font-family: 'Glyphicons Halflings';
     src: url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.eot');
@@ -15,7 +14,6 @@
 /**
  *Font Awesome Fonts
  */
-
 @font-face {
     font-family: 'FontAwesome';
     src: url('../bower_components/font-awesome/fonts/fontawesome-webfont.eot?v=4.1.0');
@@ -27,13 +25,33 @@
     font-style: normal;
 }
 
-/**
- * App-wide Styles
- */
+body {
+  background-color: #222;
+  color: #999;
+}
+
 
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
     color: #000;
     padding: 0.2em 0;
+}
+
+.as-button {
+  cursor: pointer;
+}
+.as-button:focus {
+  outline: none;
+}
+.as-button:hover {
+  color: orange;
+}
+.as-button.checked {
+  color: yellowgreen;
+}
+
+
+.background {
+
 }

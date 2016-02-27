@@ -1,0 +1,12 @@
+<div class="sudoku-schema" tabindex="1">
+  <div class="sudoku-row" ng-repeat="r in structure.rows track by $index"
+       ng-class="{'group': !($index % structure.rowrank)}">
+    <div class="sudoku-cell" ng-repeat="c in structure.cols track by $index"
+         ng-class="{'group': !($index % structure.colrank),
+                    'current':current.is($index,$parent.$index),
+                    'fixed':schema.fixed[($parent.$index*9+$index)]}"
+         ng-click="current.select($index,$parent.$index)">
+      <div class="cell-value">{{schema.values[($parent.$index*9+$index)]}}</div>
+    </div>
+  </div>
+</div>
