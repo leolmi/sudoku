@@ -5,8 +5,12 @@ angular.module('sudokuApp')
     function($rootScope) {
 
       function resetAvailables(cell) {
-        for (var i = 1; i < cell.dimension + 1; i++)
-          cell.available.push(i);
+        if (cell.value)
+          cell.available = [];
+        else {
+          for (var i = 1; i < cell.dimension + 1; i++)
+            cell.available.push(i);
+        }
       }
 
       var SudokuSchemaCell = function(n) {
