@@ -15,7 +15,7 @@ angular.module('sudokuApp')
 
       AlgorithmIntersections.prototype = new Algorithm();
 
-      AlgorithmIntersections.prototype.apply = function(schema) {
+      AlgorithmIntersections.prototype.apply = function(schema, forks) {
         //TODO ....
         return false;
       };

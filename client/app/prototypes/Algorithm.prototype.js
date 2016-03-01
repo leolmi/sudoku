@@ -12,7 +12,7 @@ angular.module('sudokuApp')
       Algorithm.prototype = {
         name: '',
         score: 0,
-        apply:function(schema) { return false; }
+        apply:function(schema, forks) { return false; }
       };
 
       return (Algorithm);

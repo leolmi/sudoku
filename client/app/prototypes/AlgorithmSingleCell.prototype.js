@@ -23,7 +23,7 @@ angular.module('sudokuApp')
 
       AlgorithmSingleCell.prototype = new Algorithm();
 
-      AlgorithmSingleCell.prototype.apply = function(schema) {
+      AlgorithmSingleCell.prototype.apply = function(schema, forks) {
         return _.find(schema.groups, function(g){
           var values = getValuesContainer(schema);
           g.cells.forEach(function(c){

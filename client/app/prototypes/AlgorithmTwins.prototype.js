@@ -15,7 +15,7 @@ angular.module('sudokuApp')
 
       AlgorithmTwins.prototype = new Algorithm();
 
-      AlgorithmTwins.prototype.apply = function(schema) {
+      AlgorithmTwins.prototype.apply = function(schema, forks) {
         //TODO ....
         return false;
       };

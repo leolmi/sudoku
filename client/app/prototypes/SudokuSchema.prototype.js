@@ -106,6 +106,9 @@ angular.module('sudokuApp')
         },
         log: function(msg) {
           this.report.push(msg);
+        },
+        clone: function() {
+          return new SudokuSchema(this);
         }
       };
 

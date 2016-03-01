@@ -15,7 +15,7 @@ angular.module('sudokuApp')
 
       AlgorithmSingleValue.prototype = new Algorithm();
 
-      AlgorithmSingleValue.prototype.apply = function(schema) {
+      AlgorithmSingleValue.prototype.apply = function(schema, forks) {
         return _.find(schema.cells, function (c) {
           var result = (c.available.length == 1 && !c.value);
           if (result)
