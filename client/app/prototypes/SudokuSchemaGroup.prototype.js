@@ -9,7 +9,10 @@ angular.module('sudokuApp')
         var self = this;
         $rootScope.$on('cell-value-changed', function(e, cell){
           if (self.cells.indexOf(cell)>-1) {
-            cell.removeAvailables(this.getValues());
+            var values = self.getValues();
+            self.cells.forEach(function(c){
+              c.removeAvailables(values);
+            });
           }
         });
       };
@@ -20,7 +23,7 @@ angular.module('sudokuApp')
           var values = [];
           this.cells.forEach(function(c){
             if (c.value>0)
-              values.push(c.value);
+              values.push(parseInt(c.value));
           });
           return values;
         }

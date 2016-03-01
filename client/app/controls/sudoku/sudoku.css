@@ -40,9 +40,6 @@
 .sudoku-schema > .sudoku-row > .sudoku-cell.group {
   margin-left: 3px;
 }
-.sudoku-schema > .sudoku-row > .sudoku-cell:hover {
-  background-color: yellowgreen;
-}
 .sudoku-schema > .sudoku-row > .sudoku-cell.current {
   background-color: darkorange;
 }
@@ -57,9 +54,22 @@
   font-size: 32px;
   color: #999;
 }
-.sudoku-schema > .sudoku-row > .sudoku-cell.current > .cell-value {
+.sudoku-schema > .sudoku-row > .sudoku-cell.current > .cell-value,
+.sudoku-schema > .sudoku-row > .sudoku-cell.current.fixed > .cell-value {
   color: #222;
 }
-.sudoku-schema > .sudoku-row > .sudoku-cell.fixed > .cell-value {
-  color: #fff;
+.sudoku-schema > .sudoku-row > .sudoku-cell:not(.fixed) {
+  cursor: pointer;
 }
+.sudoku-schema > .sudoku-row > .sudoku-cell.fixed > .cell-value {
+  color: yellowgreen;
+}
+
+.sudoku-schema > .sudoku-row > .sudoku-cell:hover,
+.sudoku-schema > .sudoku-row > .sudoku-cell.fixed:hover,
+.sudoku-schema > .sudoku-row > .sudoku-cell.fixed:hover > .cell-value {
+  background-color: yellowgreen;
+  color: #222;
+}
+
+

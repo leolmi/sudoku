@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .controller('MainCtrl', ['$scope','$http','socket','SudokuSchema',
-    function ($scope, $http, socket,SudokuSchema) {
+  .controller('MainCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema',
+    function ($scope, $http, socket, $rootScope, SudokuSchema) {
 
       $scope.buttons = [{
         icon:'fa-th',
@@ -15,13 +15,22 @@ angular.module('sudokuApp')
         page:'settings'
       }];
       $scope.activePage = $scope.buttons[0].page;
-      $scope.schema = new SudokuSchema();
+      $scope.schema = new SudokuSchema('600092000100300400008004050080600040009170000000040905090000300850036000000001092');
 
       $scope.setPage = function(page) {
         $('.tab-pane.active').removeClass('active');
         $('#'+ page).addClass('active');
         $scope.activePage = page;
       };
+
+      $scope.save = function() {
+
+      };
+
+
+      $rootScope.$on('selected-cell-changed', function(e, current){
+        $scope.current = JSON.stringify(current, null, 2);
+      });
 
       //$scope.awesomeThings = [];
       //

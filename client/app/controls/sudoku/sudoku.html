@@ -6,7 +6,7 @@
                     'current':current.is($index,$parent.$index),
                     'fixed':schema.fixed[($parent.$index*9+$index)]}"
          ng-click="current.select($index,$parent.$index)">
-      <div class="cell-value">{{schema.values[($parent.$index*9+$index)]}}</div>
+      <div class="cell-value">{{schema.cells[($parent.$index*9+$index)].value}}</div>
     </div>
   </div>
 </div>

@@ -5,9 +5,8 @@ angular.module('sudokuApp')
     function($rootScope) {
 
       function resetAvailables(cell) {
-        if (cell.value)
-          cell.available = [];
-        else {
+        cell.available = [];
+        if (!cell.value) {
           for (var i = 1; i < cell.dimension + 1; i++)
             cell.available.push(i);
         }
@@ -20,13 +19,13 @@ angular.module('sudokuApp')
         this.available = [];
         this.pencil = [];
         resetAvailables(this);
-        var self = this;
-        $rootScope.$watch(function () {
-          return self.value;
-        }, function () {
-          resetAvailables(self);
-          $rootScope.$broadcast('cell-value-changed', self);
-        });
+        //var self = this;
+        //$rootScope.$watch(function () {
+        //  return self.value;
+        //}, function () {
+        //  resetAvailables(self);
+        //  $rootScope.$broadcast('cell-value-changed', self);
+        //});
       };
       SudokuSchemaCell.prototype = {
         dimension: 9,
@@ -34,7 +33,16 @@ angular.module('sudokuApp')
         fixed: false,
         available:[],
         pencil:[],
+        setValue:function(v) {
+          this.value = _.isNumber(v) && v > 0 && v <= this.dimension ? v : undefined;
+          resetAvailables(this);
+          $rootScope.$broadcast('cell-value-changed', this);
+        },
         removeAvailables:function(values) {
+          if (this.value) {
+            this.available = [];
+            return;
+          }
           if (!values) return;
           if (!_.isArray(values)) values = [values];
           this.available = _.difference(this.available, values);

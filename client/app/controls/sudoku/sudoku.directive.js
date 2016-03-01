@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .directive('sudoku',['SudokuSchema','$timeout',
-    function(SudokuSchema,$timeout) {
+  .directive('sudoku',['SudokuSchema','$timeout','$rootScope',
+    function(SudokuSchema,$timeout,$rootScope) {
       return {
         restrict: "E",
-        templateUrl: 'app/controls/sudoku.html',
+        templateUrl: 'app/controls/sudoku/sudoku.html',
         scope: { options:'=' },
         link: function (scope, ele, atr) {
           scope.schema = (scope.options instanceof SudokuSchema) ?
@@ -22,14 +22,18 @@ angular.module('sudokuApp')
             is: function (x, y) {
               return (x == this.x && y == this.y);
             },
+            getLineCode: function() {
+              return this.y*scope.schema.dimension + this.x;
+            },
             select:function (x, y) {
               this.x = x;
               this.y = y;
+              $rootScope.$broadcast('selected-cell-changed', {current:scope.schema.cells[this.getLineCode()]});
             },
             setValue: function(v) {
               if (this.isLocked()) return;
               var pos = (scope.schema.dimension * this.y + this.x);
-              scope.schema.values[pos] = (v < 1) ? undefined : v;
+              scope.schema.cells[pos].setValue(v);
             },
             move: function(direction) {
               var pos = (scope.schema.dimension * this.y + this.x);

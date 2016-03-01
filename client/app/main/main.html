@@ -11,6 +11,11 @@
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane active" id="schema">
     <sudoku options="schema"></sudoku>
+    <div style="text-align: center;">
+      <i class="as-button fa fa-bolt" ng-click="resolve()"></i>
+      <i class="as-button fa fa-save" ng-click="save()"></i>
+    </div>
+    <pre>{{current}}</pre>
   </div>
   <div role="tabpanel" class="tab-pane" id="engine">
     Generatore di schemi

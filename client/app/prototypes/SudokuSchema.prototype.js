@@ -49,9 +49,11 @@ angular.module('sudokuApp')
         this.score = 0;
         this.cells = [];
         this.groups = [];
-        if (options)
+        if (_.isObject(options))
           _.extend(this, options);
         build(this);
+        if (_.isString(options))
+          this.parse(options);
       };
       SudokuSchema.prototype = {
         symmetry: 'none',
@@ -73,6 +75,31 @@ angular.module('sudokuApp')
         isWrong:function() {
           return _.find(this.cells, function (c) {
             return c.available.length <= 0;
+          });
+        },
+        parse:function(txt) {
+          var self = this;
+          var v = [];
+          var re = /(\d)/gm;
+          var m;
+          while ((m = re.exec(txt)) !== null) {
+            if (m.index === re.lastIndex) {
+              re.lastIndex++;
+            }
+            v.push((m[0]>0) ? parseInt(m[0]) : undefined);
+          }
+          if (v.length>0 && v.length<82) {
+            self.values = v;
+            self.fixed = _.map(v, function(sv){
+              return (sv>0) ? 1 : 0;
+            });
+          }
+
+          self.values.forEach(function(v, i){
+            self.cells[i].setValue(v);
+          });
+          self.fixed.forEach(function(v, i){
+            self.cells[i].fixed = v ? true : false;
           });
         }
       };
