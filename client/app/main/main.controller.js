@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .controller('MainCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema',
-    function ($scope, $http, socket, $rootScope, SudokuSchema) {
+  .controller('MainCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema','manager',
+    function ($scope, $http, socket, $rootScope, SudokuSchema, manager) {
 
       $scope.buttons = [{
         icon:'fa-th',
@@ -24,9 +24,16 @@ angular.module('sudokuApp')
       };
 
       $scope.save = function() {
-
+        //TODO...
       };
 
+      $scope.open = function() {
+        //TODO...
+      };
+
+      $scope.solve = function() {
+        manager.solve($scope.schema, true);
+      };
 
       $rootScope.$on('selected-cell-changed', function(e, current){
         $scope.current = JSON.stringify(current, null, 2);

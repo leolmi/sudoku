@@ -4,9 +4,9 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 var SchemaSchema = new Schema({
-  symmetry: Boolean,
+  symmetry: String,
   type: String,
-  values: [String],
+  values: String,
   score: Number
 });
 

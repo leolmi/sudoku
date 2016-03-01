@@ -3,6 +3,14 @@
 angular.module('sudokuApp')
   .factory('AlgorithmSingleCell',['Algorithm',
     function(Algorithm) {
+
+      function getValuesContainer(schema) {
+        var values = [];
+        for(var i=0;i<schema.dimension;i++)
+          values.push([]);
+        return values;
+      }
+
       /**
        * Celle uniche per il valore (il gruppo contiene quel valore solo in quella cella)
        * @param info
@@ -16,19 +24,21 @@ angular.module('sudokuApp')
       AlgorithmSingleCell.prototype = new Algorithm();
 
       AlgorithmSingleCell.prototype.apply = function(schema) {
-        var values = [];
-        for(var i=0;i<schema.dimension;i++)
-          values.push([]);
-        schema.cells.forEach(function(c){
-          c.available.forEach(function(v){
-            values[v].push(c);
+        return _.find(schema.groups, function(g){
+          var values = getValuesContainer(schema);
+          g.cells.forEach(function(c){
+            c.available.forEach(function(v){
+              values[v-1].push(c);
+            });
           });
-        });
-        return _.find(values, function(v, i){
-          var result = (v.length==1);
+          var value = 0;
+          var result = _.find(values, function(v, i){
+            value = i+1;
+            return v.length == 1;
+          });
           if (result)
-            v[0].value = i;
-          return result;
+            result[0].setValue(value);
+          return result ? true : false;
         });
       };
 

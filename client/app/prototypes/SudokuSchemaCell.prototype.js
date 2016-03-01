@@ -19,13 +19,6 @@ angular.module('sudokuApp')
         this.available = [];
         this.pencil = [];
         resetAvailables(this);
-        //var self = this;
-        //$rootScope.$watch(function () {
-        //  return self.value;
-        //}, function () {
-        //  resetAvailables(self);
-        //  $rootScope.$broadcast('cell-value-changed', self);
-        //});
       };
       SudokuSchemaCell.prototype = {
         dimension: 9,

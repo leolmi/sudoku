@@ -19,7 +19,7 @@ angular.module('sudokuApp')
         return _.find(schema.cells, function (c) {
           var result = (c.available.length == 1 && !c.value);
           if (result)
-            c.value = c.available[0];
+            c.setValue(c.available[0]);
           return result;
         });
       };

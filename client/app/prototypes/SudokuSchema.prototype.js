@@ -49,6 +49,7 @@ angular.module('sudokuApp')
         this.score = 0;
         this.cells = [];
         this.groups = [];
+        this.report = [];
         if (_.isObject(options))
           _.extend(this, options);
         build(this);
@@ -64,6 +65,7 @@ angular.module('sudokuApp')
         score: 0,
         cells: [],
         groups: [],
+        report: [],
         getValue: function(x,y) {
           return this.values[(y*9)+x];
         },
@@ -101,6 +103,9 @@ angular.module('sudokuApp')
           self.fixed.forEach(function(v, i){
             self.cells[i].fixed = v ? true : false;
           });
+        },
+        log: function(msg) {
+          this.report.push(msg);
         }
       };
 

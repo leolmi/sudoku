@@ -1,28 +1,33 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('manager',['SudokuSchema','AlgorithmSingleValue','AlgorithmSingleCell',
-    function(SudokuSchema,AlgorithmSingleValue,AlgorithmSingleCell) {
+  .factory('manager',['SudokuSchema','$injector','algorithms',
+    function(SudokuSchema,$injector,algorithms) {
       var _options = {
-        symmetry:['total','polar','horizontal','vertical','diagonal \\','diagonal /'],
+        symmetries:['none','total','polar','horizontal','vertical','diagonal \\','diagonal /'],
+        scores:[
+          {name:'very easy', max:80},
+          {name:'easy', max:100},
+          {name:'middle', max:160},
+          {name:'hard', max:240},
+          {name:'very hard', max:100000}]
       };
 
-      var _algorithms = [{
-        name:'single value',
-        instance: new AlgorithmSingleValue()
-      },{
-        name:'single cell',
-        instance: new AlgorithmSingleCell()
-      }];
+      var _algorithms = _.map(algorithms.availableAlgorithms, function(a){
+        var ctor = $injector.get(a.proto);
+        return new ctor(a);
+      });
+
 
       function solveSchema(schema, step) {
         var done = false;
         do {
           //cerca il primo algoritmo che riesce a risolvere
-          var go = _.find(_algorithms, function(alg){
+          var a = _.find(_algorithms, function(alg){
             return alg.apply(schema);
           });
-          if (go){
+          if (a){
+            schema.log('Applicato algoritmo '+ a.name);
             //verifica la completezza dello schema oppure
             //la richiesta di stop sullo step
             done = step || schema.isComplete();
@@ -32,16 +37,11 @@ angular.module('sudokuApp')
             done = true;
           }
 
-        } while(done);
-      }
-
-      function solve(schema, step) {
-        var solver = new SolverSchema(schema);
-        return solveSchema(solver);
+        } while(!done);
       }
 
       return {
         options:_options,
-        solve:solve
+        solve: solveSchema
       }
     }]);
