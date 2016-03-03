@@ -120,6 +120,7 @@ angular.module('sudokuApp')
         reset: function() {
           this.cells.forEach(function(c){ c.setValue(); });
           this.cells.forEach(function(c){ c.setValue(); });
+          this.report = [];
         }
       };
 

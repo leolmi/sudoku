@@ -10,13 +10,21 @@
 </header>
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane active" id="schema">
-    <sudoku options="schema"></sudoku>
-    <div style="text-align: center;">
-      <i class="as-button fa" ng-repeat="b in schemaButtons"
-         style="margin: 0 4px;" ng-attr-title="{{b.tooltip}}"
-         ng-class="b.style" ng-click="b.action()"></i>
+    <div class="row">
+      <div class="col-md-4">
+        <div ng-repeat="l in schema.report track by $index">{{l}}</div>
+      </div>
+      <div class="col-md-4">
+        <sudoku options="schema"></sudoku>
+        <div class="sudoku-buttons-bar">
+          <i class="as-button fa" ng-repeat="b in schemaButtons"
+             ng-attr-title="{{b.tooltip}}" ng-class="b.style" ng-click="b.action()"></i>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <pre>{{current}}</pre>
+      </div>
     </div>
-    <pre>{{current}}</pre>
   </div>
   <div role="tabpanel" class="tab-pane" id="engine">
     Generatore di schemi

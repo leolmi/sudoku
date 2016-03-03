@@ -13,3 +13,17 @@ header > .main-buttons-bar > .main-button {
 header > .main-buttons-bar > .main-button.active > i {
   color: yellowgreen;
 }
+
+.tab-content .row {
+  margin: 0;
+}
+
+.sudoku-buttons-bar {
+  text-align: center;
+  font-size: 20px;
+  margin: 20px 0;
+}
+.sudoku-buttons-bar > .as-button {
+  margin: 0 10px;
+}
+

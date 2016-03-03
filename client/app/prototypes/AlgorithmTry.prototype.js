@@ -27,6 +27,7 @@ angular.module('sudokuApp')
         var index = schema.cells.indexOf(source);
 
         //2. genera un numero di fork dato dal numero di valori possibili della cella -1 (lo schema origine)
+        if (!forks) return false;
         for (var i = 1; i < availables.length; i++) {
           var clone = new SudokuSchema();
           clone.cloneBy(schema);
