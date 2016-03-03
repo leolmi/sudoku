@@ -26,6 +26,21 @@ angular.module('sudokuApp')
               values.push(parseInt(c.value));
           });
           return values;
+        },
+        getSummary:function() {
+          var self = this;
+          var summary = [];
+          for (var i = 0; i < self.cells.length; i++) {
+            summary.push({code: 0, hash:'', cells: []});
+          }
+          self.cells.forEach(function (c, i) {
+            c.available.forEach(function (v) {
+              summary[v-1].code++;
+              summary[v-1].hash += ''+i;
+              summary[v-1].cells.push(c);
+            });
+          });
+          return summary;
         }
       };
       return (SudokuSchemaGroup);

@@ -15,7 +15,7 @@ angular.module('sudokuApp')
         page:'settings'
       }];
       $scope.activePage = $scope.buttons[0].page;
-      $scope.schema = new SudokuSchema('600092000100300400008004050080600040009170000000040905090000300850036000000001092');
+      $scope.schema = new SudokuSchema('000002000040500700516000240000026000890000072000840000069000183003007020000100000');
 
       $scope.setPage = function(page) {
         $('.tab-pane.active').removeClass('active');

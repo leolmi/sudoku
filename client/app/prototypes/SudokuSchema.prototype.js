@@ -74,10 +74,13 @@ angular.module('sudokuApp')
             return c.isEmpty();
           });
         },
-        isWrong:function() {
+        isCorrupted:function() {
           return _.find(this.cells, function (c) {
-            return c.available.length <= 0;
+            return c.available.length < 1;
           });
+        },
+        isCorreptedOrComplete: function() {
+          return this.isComplete() || this.isCorrupted();
         },
         parse:function(txt) {
           var self = this;
@@ -99,6 +102,8 @@ angular.module('sudokuApp')
 
           self.values.forEach(function(v, i){
             self.cells[i].setValue(v);
+            //self.cells[i].value = v;
+            //if (v) self.cells[i].available = [];
           });
           self.fixed.forEach(function(v, i){
             self.cells[i].fixed = v ? true : false;

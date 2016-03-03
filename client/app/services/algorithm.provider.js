@@ -4,13 +4,13 @@ angular.module('sudokuApp')
   .provider('algorithms',
     function() {
       var availableAlgorithms = [{
-        name:'single value',
-        score: 1,
-        proto: 'AlgorithmSingleValue'
-      },{
         name:'single cell',
-        score: 5,
+        score: 1,
         proto: 'AlgorithmSingleCell'
+      },{
+        name:'single value',
+        score: 5,
+        proto: 'AlgorithmSingleValue'
       //},{
       //  name:'intersections',
       //  score: 2,

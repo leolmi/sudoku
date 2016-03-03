@@ -17,6 +17,7 @@ angular.module('sudokuApp')
 
       AlgorithmIntersections.prototype.apply = function(schema, forks) {
         //TODO ....
+        //allineamenti nel gruppo che permettono di escludere possibili valori su altri gruppi
         return false;
       };
 

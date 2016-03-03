@@ -27,15 +27,28 @@ angular.module('sudokuApp')
         if (!schemas) return false;
         if (!_.isArray(schemas)) schemas = [schemas];
         return !_.find(schemas, function(s){
-          return !s.isComplete();
+          return !s.isCorreptedOrComplete();
         });
       }
 
+      /**
+       * Risolve lo schema restituendo tutte le possibili soluzioni
+       * @param schema
+       * @param step
+       * @returns {*}
+         */
       function solve(schema, step) {
         if (!schema) return false;
         var schemas = [schema];
-        solveSchemas(schemas, step);
+        return solveSchemas(schemas, step);
       }
+
+      /**
+       * Risolve tutti gli schemi autogenerati
+       * @param schemas
+       * @param step
+       * @returns {Array}
+         */
       function solveSchemas(schemas, step) {
         var done = false;
         do {
@@ -53,28 +66,8 @@ angular.module('sudokuApp')
           done = step || areComplete(schemas);
 
         } while(!done);
-      }
-
-
-      function solveSingleSchema(schema) {
-        var done = false;
-        do {
-          var forks = [];
-          //cerca il primo algoritmo che riesce a risolvere
-          var a = _.find(_algorithms, function(alg){
-            return alg.apply(schema, forks);
-          });
-          if (a){
-            schema.log('Applicato algoritmo '+ a.name);
-            //verifica la completezza dello schema oppure
-            //la richiesta di stop sullo step
-            done = step || schema.isComplete();
-          } else {
-            //nessun algoritmo produce risultato
-            //non risolvibile...
-            done = true;
-          }
-        } while(!done);
+        //restituisce l'elenco egli schemi completati
+        return _.filter(schemas, function(s) { return s.isComplete(); });
       }
 
 
@@ -89,7 +82,7 @@ angular.module('sudokuApp')
             schema.log('Applicato algoritmo '+ a.name);
             //verifica la completezza dello schema oppure
             //la richiesta di stop sullo step
-            done = step || schema.isComplete();
+            done = step || schema.isCorreptedOrComplete();
           } else {
             //nessun algoritmo produce risultato
             //non risolvibile...
@@ -101,7 +94,8 @@ angular.module('sudokuApp')
 
 
       return {
-        options:_options,
+        options: _options,
+        solveAll: solve,
         solve: solveSchema
       }
     }]);

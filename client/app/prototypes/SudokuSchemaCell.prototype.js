@@ -5,11 +5,7 @@ angular.module('sudokuApp')
     function($rootScope) {
 
       function resetAvailables(cell) {
-        cell.available = [];
-        if (!cell.value) {
-          for (var i = 1; i < cell.dimension + 1; i++)
-            cell.available.push(i);
-        }
+        cell.available = _.range(1, cell.dimension+1);
       }
 
       var SudokuSchemaCell = function(n) {

@@ -16,8 +16,28 @@ angular.module('sudokuApp')
       AlgorithmTwins.prototype = new Algorithm();
 
       AlgorithmTwins.prototype.apply = function(schema, forks) {
-        //TODO ....
-        return false;
+        //ricerca i gemelli (le sole due celle che possono contenere una coppia di valori)
+        return _.find(schema.groups, function(g) {
+          //ricerca i summary con le coppie
+          var summary = g.getSummary();
+
+          var twins = _(summary)
+            .filter(function(r){
+              return r.code == 2;
+            })
+            .groupBy('hash')
+            .filter(function(g){
+              return g.length == 2;
+            })
+            .first()
+            .value();
+
+          if (twins) {
+            //TODO: ....
+          }
+          return twins;
+
+        });
       };
 
       return (AlgorithmTwins);

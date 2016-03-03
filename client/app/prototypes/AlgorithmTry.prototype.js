@@ -22,17 +22,20 @@ angular.module('sudokuApp')
           if (!source || source.available.length > c.available.length)
             source = c;
         });
-        if (source.available.length < 2) return false;
-        var sourceIndex = schema.cells.indexOf(source);
+        var availables = source.available.slice(0);
+        if (availables.length < 2) return false;
+        var index = schema.cells.indexOf(source);
 
         //2. genera un numero di fork dato dal numero di valori possibili della cella -1 (lo schema origine)
-        var forks = [schema];
-        for (var i = 1; i < source.available.length; i++)
+        for (var i = 1; i < availables.length; i++)
           forks.push(schema.clone())
 
         //3. valorizza ogni schema, nella cella individuata, con il valore possibile scelto
-        source.available.forEach(function (v, i) {
-          forks[i].cells[sourceIndex].setValue(source.available[i]);
+        availables.forEach(function (v, i) {
+          if (i==0)
+            source.setValue(availables[i]);
+          else
+            forks[i-1].cells[index].setValue(availables[i]);
         });
         return true;
       };
