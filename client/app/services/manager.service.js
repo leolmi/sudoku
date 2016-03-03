@@ -62,7 +62,7 @@ angular.module('sudokuApp')
               s.log('Applicato algoritmo '+ a.name);
           });
           if (forks.length>0)
-            Array.push.apply(schemas, forks);
+            Array.prototype.push.apply(schemas, forks);
           done = step || areComplete(schemas);
 
         } while(!done);
@@ -71,31 +71,19 @@ angular.module('sudokuApp')
       }
 
 
-      function solveSchema(schema, step) {
-        var done = false;
-        do {
-          //cerca il primo algoritmo che riesce a risolvere
-          var a = _.find(_algorithms, function(alg){
-            return alg.apply(schema);
-          });
-          if (a){
-            schema.log('Applicato algoritmo '+ a.name);
-            //verifica la completezza dello schema oppure
-            //la richiesta di stop sullo step
-            done = step || schema.isCorreptedOrComplete();
-          } else {
-            //nessun algoritmo produce risultato
-            //non risolvibile...
-            done = true;
-          }
-
-        } while(!done);
+      function solveStep(schema) {
+        //cerca il primo algoritmo che riesce a risolvere
+        var a = _.find(_algorithms, function(alg){
+          return alg.apply(schema);
+        });
+        if (a)
+          schema.log('Applicato algoritmo '+ a.name);
       }
 
 
       return {
         options: _options,
         solveAll: solve,
-        solve: solveSchema
+        solveStep: solveStep
       }
     }]);

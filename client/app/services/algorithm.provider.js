@@ -19,10 +19,10 @@ angular.module('sudokuApp')
       //  name:'twins',
       //  score: 2,
       //  proto: 'AlgorithmTwins'
-      //},{
-      //  name:'try',
-      //  score: 20,
-      //  proto: 'AlgorithmTry'
+      },{
+        name:'try',
+        score: 20,
+        proto: 'AlgorithmTry'
       }];
 
       this.$get = function () {

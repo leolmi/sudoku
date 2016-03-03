@@ -22,7 +22,8 @@ angular.module('sudokuApp')
         fixed: false,
         available:[],
         pencil:[],
-        setValue:function(v) {
+        setValue:function(v, force) {
+          if (this.fixed && !force) return;
           this.value = _.isNumber(v) && v > 0 && v <= this.dimension ? v : undefined;
           resetAvailables(this);
           $rootScope.$broadcast('cell-value-changed', this);

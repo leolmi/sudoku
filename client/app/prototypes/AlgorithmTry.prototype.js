@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('AlgorithmTry',['Algorithm',
-    function(Algorithm) {
+  .factory('AlgorithmTry',['Algorithm','SudokuSchema',
+    function(Algorithm, SudokuSchema) {
       /**
        *
        * @param info
@@ -19,7 +19,7 @@ angular.module('sudokuApp')
         //1. ricerca la prima cella con elenco di valori possibili più piccolo
         var source = undefined;
         schema.cells.forEach(function (c, i) {
-          if (!source || source.available.length > c.available.length)
+          if (!c.value && (!source || source.available.length > c.available.length))
             source = c;
         });
         var availables = source.available.slice(0);
@@ -27,8 +27,11 @@ angular.module('sudokuApp')
         var index = schema.cells.indexOf(source);
 
         //2. genera un numero di fork dato dal numero di valori possibili della cella -1 (lo schema origine)
-        for (var i = 1; i < availables.length; i++)
-          forks.push(schema.clone())
+        for (var i = 1; i < availables.length; i++) {
+          var clone = new SudokuSchema();
+          clone.cloneBy(schema);
+          forks.push(clone)
+        }
 
         //3. valorizza ogni schema, nella cella individuata, con il valore possibile scelto
         availables.forEach(function (v, i) {

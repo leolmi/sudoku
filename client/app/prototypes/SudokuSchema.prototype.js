@@ -70,14 +70,14 @@ angular.module('sudokuApp')
           return this.values[(y*9)+x];
         },
         isComplete:function() {
-          return !_.find(this.cells, function(c){
+          return _.find(this.cells, function(c){
             return c.isEmpty();
-          });
+          }) ? false : true;
         },
         isCorrupted:function() {
           return _.find(this.cells, function (c) {
-            return c.available.length < 1;
-          });
+            return c.available.length < 1 && !c.value;
+          }) ? true : false;
         },
         isCorreptedOrComplete: function() {
           return this.isComplete() || this.isCorrupted();
@@ -102,8 +102,6 @@ angular.module('sudokuApp')
 
           self.values.forEach(function(v, i){
             self.cells[i].setValue(v);
-            //self.cells[i].value = v;
-            //if (v) self.cells[i].available = [];
           });
           self.fixed.forEach(function(v, i){
             self.cells[i].fixed = v ? true : false;
@@ -112,8 +110,16 @@ angular.module('sudokuApp')
         log: function(msg) {
           this.report.push(msg);
         },
-        clone: function() {
-          return new SudokuSchema(this);
+        cloneBy: function(other) {
+          this.cells.forEach(function(c,i){
+            c.value = other.cells[i].value;
+            c.fixed = other.cells[i].fixed;
+            c.available = _.clone(other.cells[i].available);
+          });
+        },
+        reset: function() {
+          this.cells.forEach(function(c){ c.setValue(); });
+          this.cells.forEach(function(c){ c.setValue(); });
         }
       };
 
