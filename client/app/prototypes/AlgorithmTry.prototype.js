@@ -19,6 +19,12 @@ angular.module('sudokuApp')
 
       AlgorithmTry.prototype.apply = function (schema, forks) {
         var self = this;
+
+
+        //TODO: DA RIVEDERE: prima cerca i gemelli, se li trova parte valorizzando questi!!!
+
+
+
         //1. ricerca la prima cella con elenco di valori possibili più piccolo
         var source = undefined;
         schema.cells.forEach(function (c, i) {
@@ -28,6 +34,7 @@ angular.module('sudokuApp')
         var availables = source.available.slice(0);
         if (availables.length < 2) return false;
         var index = schema.cells.indexOf(source);
+
 
         if (!forks) return false;
         //2. genera un numero di fork dato dal numero di valori possibili della cella -1 (lo schema origine)

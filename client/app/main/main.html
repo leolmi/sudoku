@@ -12,10 +12,11 @@
   <div role="tabpanel" class="tab-pane active" id="schema">
     <div class="row">
       <div class="col-md-4">
-        <div>Score: {{schema.getScore()}}  difficulty: {{getDiff()}}</div>
+        <div>Score: <strong>{{schema.getScore()}}</strong>  difficulty: <strong>{{getDiff()}}</strong></div>
+        <div></div>
         <div class="report-line" ng-click="select(l)" ng-class="{'selected':l===line}"
              ng-repeat="l in schema.report">
-          {{getCell(l)}}={{l.value}} {{l.algName}}
+          <small>{{($index+1)}}</small> {{getCell(l)}}={{l.value}} <small style="margin-left: 10px;">{{l.algName}}</small>
         </div>
       </div>
       <div class="col-md-4">

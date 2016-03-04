@@ -11,7 +11,8 @@ angular.module('sudokuApp')
           {name:'easy', max:100},
           {name:'middle', max:160},
           {name:'hard', max:240},
-          {name:'very hard', max:100000}]
+          {name:'very hard', max:100000}],
+        stopTypes:['manual','after']
       };
 
       /**

@@ -15,17 +15,16 @@ angular.module('sudokuApp')
         page:'settings'
       }];
       $scope.activePage = $scope.buttons[0].page;
-      //$scope.schema = new SudokuSchema('000002000040500700516000240000026000890000072000840000069000183003007020000100000'); //medio
-      //$scope.schema = new SudokuSchema('005030170073016000400900000300000060004000900020000003000009002000650390037020500'); //difficile
-      $scope.schema = new SudokuSchema('000070008007200003630850090060000005200643001900000060050068012100002700700030000'); //medio
+      //$scope.schema = new SudokuSchema('000002000040500700516000240000026000890000072000840000069000183003007020000100000'); //facile (55)
+      //$scope.schema = new SudokuSchema('005030170073016000400900000300000060004000900020000003000009002000650390037020500'); //difficile (112)
+      $scope.schema = new SudokuSchema('000070008007200003630850090060000005200643001900000060050068012100002700700030000'); //difficile (125)
 
       var _last = null;
       function resetSelection(line) {
         if (_last) delete _last.highlight;
-        $scope.line = line;
-        if (!line) return;
-        _last = $scope.schema.cells[line.index];
-        _last.highlight = true;
+        $scope.line = ($scope.line == line) ? undefined : line;
+        _last = $scope.line ? $scope.schema.cells[$scope.line.index] : null;
+        if (_last) _last.highlight = true;
       }
 
       $scope.setPage = function(page) {
