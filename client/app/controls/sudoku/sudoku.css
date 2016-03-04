@@ -53,6 +53,12 @@
   line-height: 40px;
   font-size: 32px;
   color: #999;
+  box-shadow: 0 0 0 0 darkorange;
+  -moz-transition: all .50s ease-in-out;
+  -o-transition: all .50s ease-in-out;
+  -webkit-transition: all .50s ease-in-out;
+  transition: all .50s ease-in-out;
+
 }
 .sudoku-schema > .sudoku-row > .sudoku-cell.current > .cell-value,
 .sudoku-schema > .sudoku-row > .sudoku-cell.current.fixed > .cell-value {
@@ -61,6 +67,12 @@
 .sudoku-schema > .sudoku-row > .sudoku-cell:not(.fixed) {
   cursor: pointer;
 }
+
+.sudoku-schema > .sudoku-row > .sudoku-cell:not(.fixed).highlight {
+  z-index: 100;
+  box-shadow: 0 0 0 5pt darkorange;
+}
+
 .sudoku-schema > .sudoku-row > .sudoku-cell.fixed > .cell-value {
   color: yellowgreen;
 }

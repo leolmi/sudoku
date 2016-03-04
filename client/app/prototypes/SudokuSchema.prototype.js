@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('SudokuSchema',['SudokuSchemaCell','SudokuSchemaGroup',
-    function(SudokuSchemaCell, SudokuSchemaGroup) {
+  .factory('SudokuSchema',['SudokuSchemaCell','SudokuSchemaGroup','SudokuReportLine',
+    function(SudokuSchemaCell, SudokuSchemaGroup, SudokuReportLine) {
       function initValues(schema) {
         return new Array(schema.dimension*schema.dimension);
       }
@@ -50,6 +50,7 @@ angular.module('sudokuApp')
         this.cells = [];
         this.groups = [];
         this.report = [];
+        this.disableLog = false;
         if (_.isObject(options))
           _.extend(this, options);
         build(this);
@@ -66,6 +67,7 @@ angular.module('sudokuApp')
         cells: [],
         groups: [],
         report: [],
+        disableLog: false,
         getValue: function(x,y) {
           return this.values[(y*9)+x];
         },
@@ -107,8 +109,10 @@ angular.module('sudokuApp')
             self.cells[i].fixed = v ? true : false;
           });
         },
-        log: function(msg) {
-          this.report.push(msg);
+        log: function(alg, cell) {
+          var self = this;
+          if (self.disableLog) return;
+          self.report.push(new SudokuReportLine(alg, self, cell));
         },
         cloneBy: function(other) {
           this.cells.forEach(function(c,i){
@@ -116,11 +120,24 @@ angular.module('sudokuApp')
             c.fixed = other.cells[i].fixed;
             c.available = _.clone(other.cells[i].available);
           });
+          this.report = _.map(other.report, function(l) {
+            return _.clone(l);
+          });
         },
         reset: function() {
           this.cells.forEach(function(c){ c.setValue(); });
           this.cells.forEach(function(c){ c.setValue(); });
           this.report = [];
+        },
+        getScore: function() {
+          var score = 'unknown';
+          if (this.report.length) {
+            score = 0;
+            this.report.forEach(function(l){
+              score += l.score;
+            });
+          }
+          return score;
         }
       };
 

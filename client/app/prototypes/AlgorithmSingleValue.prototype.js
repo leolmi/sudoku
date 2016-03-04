@@ -13,13 +13,16 @@ angular.module('sudokuApp')
           _.extend(this, info);
       };
 
-      AlgorithmSingleValue.prototype = new Algorithm();
+      AlgorithmSingleValue.prototype = new Algorithm('singlevalue');
 
       AlgorithmSingleValue.prototype.apply = function(schema, forks) {
+        var self = this;
         return _.find(schema.cells, function (c) {
           var result = (c.available.length == 1 && !c.value);
-          if (result)
+          if (result) {
             c.setValue(c.available[0]);
+            schema.log(self, c);
+          }
           return result;
         });
       };

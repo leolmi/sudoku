@@ -4,7 +4,9 @@ angular.module('sudokuApp')
   .factory('AlgorithmTry',['Algorithm','SudokuSchema',
     function(Algorithm, SudokuSchema) {
       /**
-       *
+       * Avanza per tentativi:
+       * scelta la prima cella con minor numero di valori possibili (n)
+       * genera n schemi uno per valore e tenta la risoluzione di ognuno di questi.
        * @param info
        * @constructor
        */
@@ -13,9 +15,10 @@ angular.module('sudokuApp')
           _.extend(this, info);
       };
 
-      AlgorithmTry.prototype = new Algorithm();
+      AlgorithmTry.prototype = new Algorithm('try');
 
       AlgorithmTry.prototype.apply = function (schema, forks) {
+        var self = this;
         //1. ricerca la prima cella con elenco di valori possibili più piccolo
         var source = undefined;
         schema.cells.forEach(function (c, i) {
@@ -26,8 +29,8 @@ angular.module('sudokuApp')
         if (availables.length < 2) return false;
         var index = schema.cells.indexOf(source);
 
-        //2. genera un numero di fork dato dal numero di valori possibili della cella -1 (lo schema origine)
         if (!forks) return false;
+        //2. genera un numero di fork dato dal numero di valori possibili della cella -1 (lo schema origine)
         for (var i = 1; i < availables.length; i++) {
           var clone = new SudokuSchema();
           clone.cloneBy(schema);
@@ -36,11 +39,16 @@ angular.module('sudokuApp')
 
         //3. valorizza ogni schema, nella cella individuata, con il valore possibile scelto
         availables.forEach(function (v, i) {
-          if (i==0)
+          if (i == 0) {
             source.setValue(availables[i]);
-          else
-            forks[i-1].cells[index].setValue(availables[i]);
+            schema.log(self, source);
+          }
+          else {
+            forks[i - 1].cells[index].setValue(availables[i]);
+            forks[i - 1].log(self, forks[i - 1].cells[index]);
+          }
         });
+
         return true;
       };
 

@@ -13,9 +13,10 @@ angular.module('sudokuApp')
           _.extend(this, info);
       };
 
-      AlgorithmTwins.prototype = new Algorithm();
+      AlgorithmTwins.prototype = new Algorithm('twins');
 
       AlgorithmTwins.prototype.apply = function(schema, forks) {
+        var self = this;
         //ricerca i gemelli (le sole due celle che possono contenere una coppia di valori)
         return _.find(schema.groups, function(g) {
           //ricerca i summary con le coppie

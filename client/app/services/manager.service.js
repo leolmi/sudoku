@@ -3,15 +3,6 @@
 angular.module('sudokuApp')
   .factory('manager',['SudokuSchema','$injector','algorithms',
     function(SudokuSchema,$injector,algorithms) {
-      var _options = {
-        symmetries:['none','total','polar','horizontal','vertical','diagonal \\','diagonal /'],
-        scores:[
-          {name:'very easy', max:80},
-          {name:'easy', max:100},
-          {name:'middle', max:160},
-          {name:'hard', max:240},
-          {name:'very hard', max:100000}]
-      };
 
       var _algorithms = _.map(algorithms.availableAlgorithms, function(a){
         var ctor = $injector.get(a.proto);
@@ -22,7 +13,7 @@ angular.module('sudokuApp')
        * Vero se gli/lo schemi passati sono tutti completati
        * @param {array|object} schemas
        * @returns {boolean}
-         */
+       */
       function areComplete(schemas) {
         if (!schemas) return false;
         if (!_.isArray(schemas)) schemas = [schemas];
@@ -36,53 +27,49 @@ angular.module('sudokuApp')
        * @param schema
        * @param step
        * @returns {*}
-         */
-      function solve(schema, step) {
+       */
+      function solve(schema) {
         if (!schema) return false;
+        schema.disableLog = false;
         var schemas = [schema];
-        return solveSchemas(schemas, step);
+        return solveSchemas(schemas);
       }
 
       /**
        * Risolve tutti gli schemi autogenerati
        * @param schemas
-       * @param step
        * @returns {Array}
-         */
-      function solveSchemas(schemas, step) {
-        var done = false;
+       */
+      function solveSchemas(schemas) {
         do {
           var forks = [];
           schemas.forEach(function(s){
             //cerca il primo algoritmo che riesce a risolvere
-            var a = _.find(_algorithms, function(alg){
+            _.find(_algorithms, function(alg){
               return alg.apply(s, forks);
             });
-            if (a)
-              s.log('Applicato algoritmo '+ a.name);
           });
           if (forks.length>0)
             Array.prototype.push.apply(schemas, forks);
-          done = step || areComplete(schemas);
-
-        } while(!done);
-        //restituisce l'elenco egli schemi completati
+        } while(!areComplete(schemas));
+        //restituisce l'elenco degli schemi completati
         return _.filter(schemas, function(s) { return s.isComplete(); });
       }
 
-
+      /**
+       * Risolve il passo successivo dello schema
+       * @param schema
+       */
       function solveStep(schema) {
+        schema.disableLog = true;
         //cerca il primo algoritmo che riesce a risolvere
-        var a = _.find(_algorithms, function(alg){
+        _.find(_algorithms, function(alg){
           return alg.apply(schema);
         });
-        if (a)
-          schema.log('Applicato algoritmo '+ a.name);
       }
 
 
       return {
-        options: _options,
         solveAll: solve,
         solveStep: solveStep
       }

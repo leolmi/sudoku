@@ -16,6 +16,7 @@ angular.module('sudokuApp')
             rows:new Array(scope.schema.dimension),
             cols:new Array(scope.schema.dimension)
           };
+
           scope.current = {
             x: 0,
             y: 0,

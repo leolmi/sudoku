@@ -21,9 +21,10 @@ angular.module('sudokuApp')
           _.extend(this, info);
       };
 
-      AlgorithmSingleCell.prototype = new Algorithm();
+      AlgorithmSingleCell.prototype = new Algorithm('singlecell');
 
       AlgorithmSingleCell.prototype.apply = function(schema, forks) {
+        var self = this;
         return _.find(schema.groups, function(g){
           var values = getValuesContainer(schema);
           g.cells.forEach(function(c){
@@ -36,8 +37,10 @@ angular.module('sudokuApp')
             value = i+1;
             return v.length == 1;
           });
-          if (result)
+          if (result) {
             result[0].setValue(value);
+            schema.log(self, result[0]);
+          }
           return result ? true : false;
         });
       };

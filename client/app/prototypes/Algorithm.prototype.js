@@ -6,12 +6,14 @@ angular.module('sudokuApp')
       var Algorithm = function(info) {
         this.name = '';
         this.score = 0;
-        if (info)
+        this.code = _.isString(info) ? info : '';
+        if (_.isObject(info))
           _.extend(this, info);
       };
       Algorithm.prototype = {
         name: '',
         score: 0,
+        code: '',
         apply:function(schema, forks) { return false; }
       };
 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .controller('MainCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema','manager',
-    function ($scope, $http, socket, $rootScope, SudokuSchema, manager) {
+  .controller('MainCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema','manager','util',
+    function ($scope, $http, socket, $rootScope, SudokuSchema, manager, util) {
 
       $scope.buttons = [{
         icon:'fa-th',
@@ -18,6 +18,15 @@ angular.module('sudokuApp')
       //$scope.schema = new SudokuSchema('000002000040500700516000240000026000890000072000840000069000183003007020000100000'); //medio
       //$scope.schema = new SudokuSchema('005030170073016000400900000300000060004000900020000003000009002000650390037020500'); //difficile
       $scope.schema = new SudokuSchema('000070008007200003630850090060000005200643001900000060050068012100002700700030000'); //medio
+
+      var _last = null;
+      function resetSelection(line) {
+        if (_last) delete _last.highlight;
+        $scope.line = line;
+        if (!line) return;
+        _last = $scope.schema.cells[line.index];
+        _last.highlight = true;
+      }
 
       $scope.setPage = function(page) {
         $('.tab-pane.active').removeClass('active');
@@ -35,6 +44,7 @@ angular.module('sudokuApp')
 
       $scope.solve = function() {
         manager.solveStep($scope.schema);
+        resetSelection();
       };
 
       $scope.solveAll = function() {
@@ -43,10 +53,33 @@ angular.module('sudokuApp')
           $scope.schema.cloneBy(result[0]);
         if (result.length > 1)
           alert('Lo schema non è a soluzione unica!! (trovate ' + result.length + ' soluzioni)');
+        resetSelection();
       };
 
       $scope.reset = function() {
         $scope.schema.reset();
+        resetSelection();
+      };
+
+
+
+
+      $scope.select = function(line) {
+        resetSelection(line);
+      };
+
+      $scope.getDiff = function() {
+        var score = parseInt($scope.schema.getScore()) || 0;
+        var sc = _.find(util.constants.scores, function(s){
+          return s.max > score;
+        });
+        return sc.name;
+      };
+
+      $scope.getCell = function(line) {
+        var x = (line.index % $scope.schema.dimension) + 1;
+        var y = parseInt(line.index / $scope.schema.dimension) + 1;
+        return '[' + x + ',' + y + ']';
       };
 
       $rootScope.$on('selected-cell-changed', function(e, current){

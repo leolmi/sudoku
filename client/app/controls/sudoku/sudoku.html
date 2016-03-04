@@ -4,7 +4,8 @@
     <div class="sudoku-cell" ng-repeat="c in structure.cols track by $index"
          ng-class="{'group': !($index % structure.colrank),
                     'current':current.is($index,$parent.$index),
-                    'fixed':schema.fixed[($parent.$index*9+$index)]}"
+                    'fixed':schema.fixed[($parent.$index*9+$index)],
+                    'highlight':schema.cells[($parent.$index*9+$index)].highlight}"
          ng-click="current.select($index,$parent.$index)">
       <div class="cell-value">{{schema.cells[($parent.$index*9+$index)].value}}</div>
     </div>

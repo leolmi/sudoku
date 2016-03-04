@@ -27,3 +27,17 @@ header > .main-buttons-bar > .main-button.active > i {
   margin: 0 10px;
 }
 
+.report-line {
+  padding: 2px 10px;
+  background-color: #444;
+  margin: 1px 0;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.report-line:hover {
+  background-color: #333;
+}
+.report-line.selected {
+  background-color: darkorange;
+  color: #111;
+}

@@ -13,7 +13,7 @@ angular.module('sudokuApp')
           _.extend(this, info);
       };
 
-      AlgorithmIntersections.prototype = new Algorithm();
+      AlgorithmIntersections.prototype = new Algorithm('intersections');
 
       AlgorithmIntersections.prototype.apply = function(schema, forks) {
         //TODO ....
