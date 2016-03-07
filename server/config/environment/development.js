@@ -5,7 +5,7 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/sudoku-dev'
+    uri: 'mongodb://127.0.0.1/sudoku-dev'
   },
 
   seedDB: true

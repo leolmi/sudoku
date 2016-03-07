@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('manager',['SudokuSchema','$injector','algorithms','util',
-    function(SudokuSchema,$injector,algorithms,util) {
+  .factory('manager',['SudokuSchema','$injector','SolverOptions','algorithms','util',
+    function(SudokuSchema,$injector,SolverOptions,algorithms,util) {
       var _state = {
         solving: false
       };
@@ -27,18 +27,19 @@ angular.module('sudokuApp')
       /**
        * Risolve lo schema restituendo tutte le possibili soluzioni
        * @param schema
-       * @param [best]
+       * @param [options]
        * @returns {*}
        */
-      function solveAll(schema, best) {
+      function solveAll(schema, options) {
         if (!schema || _state.solving) return false;
         _state.solving = true;
+        options = new SolverOptions(options);
         _state.error = null;
         schema.disableLog = false;
         var schemas = [schema];
         var result = undefined;
         try {
-          result = solveSchemas(schemas, best);
+          result = solveSchemas(schemas, options);
           _state.solving = false;
         }
         catch(err) {
@@ -54,31 +55,31 @@ angular.module('sudokuApp')
        * @param [best]
        * @returns {Array}
        */
-      function solveSchemas(schemas, best) {
+      function solveSchemas(schemas, options) {
         do {
           var forks = [];
-          schemas.forEach(function(s){
+          schemas.forEach(function (s) {
             //cerca il primo algoritmo che riesce a risolvere
-            _.find(_algorithms, function(alg){
-              return alg.apply(s, forks, best);
+            _.find(_algorithms, function (alg) {
+              return (forks.length > options.maxSchemas || (alg.active && alg.apply(s, forks)));
             });
           });
-          if (forks.length>0)
+          if (forks.length > 0)
             Array.prototype.push.apply(schemas, forks);
-          util.remove(schemas, function(s){
+          util.remove(schemas, function (s) {
             return s.isCorrupted();
           });
-        } while(!areComplete(schemas));
-        //restituisce l'elenco degli schemi completati
+        } while (schemas.length < options.maxSchemas && !areComplete(schemas));
 
+        //restituisce l'elenco degli schemi completati
         var solutions = _(schemas)
-          .each(function(s){ s.getScore(); })
-          .filter(function(s) { return s.isComplete(); })
-          .groupBy(function(s) { return s.toString(); })
+          .each(function (s) {s.getScore();})
+          .filter(function (s) {return s.isComplete();})
+          .groupBy(function (s) {return s.toString();})
           .value();
 
         var result = [];
-        _.keys(solutions).forEach(function(s){
+        _.keys(solutions).forEach(function (s) {
           result.push(_(solutions[s])
             .sortBy('score')
             .first());
@@ -94,13 +95,14 @@ angular.module('sudokuApp')
         schema.disableLog = true;
         //cerca il primo algoritmo che riesce a risolvere
         _.find(_algorithms, function(alg){
-          return alg.apply(schema);
+          return (alg.active && alg.apply(schema));
         });
       }
 
 
       return {
         state: _state,
+        algorithms: _algorithms,
         solveAll: solveAll,
         solveStep: solveStep
       }

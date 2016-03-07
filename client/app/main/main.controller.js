@@ -20,6 +20,8 @@ angular.module('sudokuApp')
       //$scope.schema = new SudokuSchema('000070008007200003630850090060000005200643001900000060050068012100002700700030000'); //medio (86)
       //$scope.schema = new SudokuSchema('000000000000096020007080035201068700003000500009450103830040200040910000000000000'); //facile ()
       $scope.schema = new SudokuSchema('000080000049600010002010409306700020000000000020008304601020700090001250000070000'); //? ()
+      $scope.algorithms = manager.algorithms;
+
 
       var _last = null;
       function resetSelection(line) {
@@ -44,7 +46,6 @@ angular.module('sudokuApp')
       };
 
       $scope.managerState = manager.state;
-      $scope.best = false;
 
       $scope.solve = function() {
         manager.solveStep($scope.schema);
@@ -52,7 +53,7 @@ angular.module('sudokuApp')
       };
 
       $scope.solveAll = function() {
-        var result = manager.solveAll($scope.schema, $scope.best);
+        var result = manager.solveAll($scope.schema);
         if (result && result.length > 0)
           $scope.schema.cloneBy(result[0]);
         if (result && result.length > 1)

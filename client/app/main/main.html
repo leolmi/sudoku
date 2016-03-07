@@ -16,7 +16,7 @@
         <div></div>
         <div class="report-line" ng-click="select(l)" ng-class="{'selected':l===line}"
              ng-repeat="l in schema.report">
-          <small>{{($index+1)}}</small> {{getCell(l)}} {{(l.values && l.values.length) ? ': '+l.values : '='+l.value}} <small style="margin-left: 10px;">{{l.algName}}</small>
+          <small>{{($index+1)}}</small> {{getCell(l)}} {{(l.values && l.values.length) ? ' -'+l.values : '='+l.value}} <small style="margin-left: 10px;">{{l.algName}}</small>
         </div>
       </div>
       <div class="col-md-4">
@@ -36,8 +36,8 @@
   </div>
   <div role="tabpanel" class="tab-pane" id="settings">
     Opzioni
-    <div class="checkbox">
-      <label><input type="checkbox" ng-model="best">Best solution</label>
+    <div class="checkbox" ng-repeat="a in algorithms">
+      <label><input type="checkbox" ng-model="a.active">{{a.name}}</label>
     </div>
   </div>
 </div>

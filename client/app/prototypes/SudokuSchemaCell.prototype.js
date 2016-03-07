@@ -12,8 +12,8 @@ angular.module('sudokuApp')
         this.dimension = n || 9;
         this.value = null;
         this.index = i;
-        this.x = n % 9;
-        this.y = parseInt(n / 9);
+        this.x = i % 9;
+        this.y = parseInt(i / 9);
         this.fixed = false;
         this.available = [];
         this.pencil = [];

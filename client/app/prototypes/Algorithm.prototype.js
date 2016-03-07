@@ -7,6 +7,7 @@ angular.module('sudokuApp')
         this.name = '';
         this.score = 0;
         this.code = _.isString(info) ? info : '';
+        this.active = true;
         if (_.isObject(info))
           _.extend(this, info);
       };
@@ -14,7 +15,8 @@ angular.module('sudokuApp')
         name: '',
         score: 0,
         code: '',
-        apply:function(schema, forks) { return false; }
+        active: true,
+        apply: function(schema, forks) { return false; }
       };
 
       return (Algorithm);

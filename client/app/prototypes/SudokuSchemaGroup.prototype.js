@@ -8,21 +8,22 @@ angular.module('sudokuApp')
       function getAlignments(cells, coord) {
         return _(cells)
           .groupBy(coord)
-          .map(function(cells){
+          .map(function(cs){
             var values = [];
-            cells.forEach(function(c){
+            cs.forEach(function(c){
               values = _.union(values, c.available);
             });
-            var alg = { cells:cells, values:values };
-            alg[coord] = cells[0][coord];
+            var alg = { cells: cs, allvalues: values };
+            alg[coord] = cs[0][coord];
             return alg;
           })
           .filter(function(alg, i, cll){
-            var v = _.clone(alg.values);
+            var v = _.clone(alg.allvalues);
             cll.forEach(function(a){
               if (a!=alg)
-                v = _.difference(v, a.values);
+                v = _.difference(v, a.allvalues);
             });
+            alg.values = v;
             return v.length>0;
           })
           .value();
