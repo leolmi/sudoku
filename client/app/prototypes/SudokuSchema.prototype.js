@@ -10,16 +10,16 @@ angular.module('sudokuApp')
       function build(schema) {
         // costruisce le celle
         schema.cells = [];
-        for (var r = 0; r < (schema.dimension*schema.dimension); r++) {
-          schema.cells.push(new SudokuSchemaCell(schema.dimension));
+        for (var i = 0; i < (schema.dimension*schema.dimension); i++) {
+          schema.cells.push(new SudokuSchemaCell(schema.dimension, i));
         }
 
         // costruisce i gruppi
         var rank = Math.sqrt(schema.dimension);
         for (var a = 0; a < schema.dimension; a++) {
-          var row = new SudokuSchemaGroup();
-          var col = new SudokuSchemaGroup();
-          var dial = new SudokuSchemaGroup();
+          var row = new SudokuSchemaGroup('R', a);
+          var col = new SudokuSchemaGroup('C', a);
+          var dial = new SudokuSchemaGroup('D', a);
           for (var b = 0; b < schema.dimension; b++) {
             row.cells.push(schema.cells[a*schema.dimension+b]);
             col.cells.push(schema.cells[b*schema.dimension+a]);
@@ -109,10 +109,12 @@ angular.module('sudokuApp')
             self.cells[i].fixed = v ? true : false;
           });
         },
-        log: function(alg, cell) {
+        // Salva una riga di log
+        // alg: algoritmo, cell: cella interessata, avl:valori esclusi
+        log: function(alg, cell, avl) {
           var self = this;
           if (self.disableLog) return;
-          self.report.push(new SudokuReportLine(alg, self, cell));
+          self.report.push(new SudokuReportLine(alg, self, cell, avl));
         },
         cloneBy: function(other) {
           this.cells.forEach(function(c,i){
@@ -130,15 +132,85 @@ angular.module('sudokuApp')
           this.report = [];
         },
         getScore: function() {
-          var score = 'unknown';
-          if (this.report.length) {
-            score = 0;
-            this.report.forEach(function(l){
-              score += l.score;
+          var self = this;
+          self.score = 'unknown';
+          if (self.report.length) {
+            self.score = 0;
+            self.report.forEach(function(l){
+              self.score += l.score;
             });
           }
-          return score;
+          return self.score;
+        },
+        // Restituisce la prima cella con il minor numero di valori possibili
+        getMinAvailable: function() {
+          var cell = undefined;
+          this.cells.forEach(function (c, i) {
+            if (!c.value && (!cell || cell.available.length > c.available.length))
+              cell = c;
+          });
+          return cell;
+        },
+        // Restituisce l'elenco delle coppie di celle gemelle
+        getTwins: function() {
+          var self = this;
+          var grouptwins = [];
+          self.groups.forEach(function(g) {
+            var summary = g.getSummary(self);
+            var g1 = _(summary)
+              .filter(function(r){ return r.code == 2; })
+              .groupBy('hash')
+              .filter(function(g){ return g.length == 2; })
+              .value();
+            Array.prototype.push.apply(grouptwins, g1);
+          });
+
+          var twins = [];
+          if (grouptwins.length) {
+            var ug = _(grouptwins)
+              .map(function(t) { return { hash: t[0].hash, twins: t }})
+              .groupBy('hash')
+              .value();
+            _.keys(ug).forEach(function(u){
+              var values = _.map(ug[u][0].twins, function(t) { return t.value; });
+              var hash = _.map(ug[u][0].twins[0].cells, function(c) { return ''+c.index; }).join();
+              twins.push({ values:values, cells: ug[u][0].twins[0].cells, hash: hash});
+            });
+          }
+
+          //integra i gemelli espliciti
+          self.groups.forEach(function(g){
+            g.getTwins().forEach(function(gt){
+              if (!_.find(twins, function(t){ return t.hash==gt.hash; })) {
+                twins.push(gt);
+              }
+            });
+          });
+
+          return twins;
+        },
+        // Restituisce tutti i gruppi che contengono tutte le celle in elenco
+        getGroups: function(cells) {
+          var self = this;
+          return _.filter(self.groups, function(g) {
+            return g.contains(cells);
+          });
+        },
+        checkValues: function(alg, cell, values) {
+          var self = this;
+          var avl = _.difference(cell.available, values);
+          if (avl.length != cell.available.length) {
+            var ex = _.difference(cell.available, avl);
+            cell.available = avl;
+            self.log(alg, cell, ex);
+            return true;
+          }
+          return false;
         }
+      };
+
+      SudokuSchema.prototype.toString = function() {
+        return _.map(this.cells, function(c){ return c.value ? c.value : 0; }).join('');
       };
 
       return (SudokuSchema);

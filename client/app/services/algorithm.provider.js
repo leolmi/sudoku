@@ -15,10 +15,10 @@ angular.module('sudokuApp')
       //  name:'intersections',
       //  score: 2,
       //  proto: 'AlgorithmIntersections'
-      //},{
-      //  name:'twins',
-      //  score: 2,
-      //  proto: 'AlgorithmTwins'
+      },{
+        name:'twins',
+        score: 2,
+        proto: 'AlgorithmTwins'
       },{
         name:'try',
         score: 20,

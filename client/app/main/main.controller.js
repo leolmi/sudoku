@@ -17,7 +17,9 @@ angular.module('sudokuApp')
       $scope.activePage = $scope.buttons[0].page;
       //$scope.schema = new SudokuSchema('000002000040500700516000240000026000890000072000840000069000183003007020000100000'); //facile (55)
       //$scope.schema = new SudokuSchema('005030170073016000400900000300000060004000900020000003000009002000650390037020500'); //difficile (112)
-      $scope.schema = new SudokuSchema('000070008007200003630850090060000005200643001900000060050068012100002700700030000'); //difficile (125)
+      //$scope.schema = new SudokuSchema('000070008007200003630850090060000005200643001900000060050068012100002700700030000'); //medio (86)
+      //$scope.schema = new SudokuSchema('000000000000096020007080035201068700003000500009450103830040200040910000000000000'); //facile ()
+      $scope.schema = new SudokuSchema('000080000049600010002010409306700020000000000020008304601020700090001250000070000'); //? ()
 
       var _last = null;
       function resetSelection(line) {
@@ -41,16 +43,19 @@ angular.module('sudokuApp')
         //TODO...
       };
 
+      $scope.managerState = manager.state;
+      $scope.best = false;
+
       $scope.solve = function() {
         manager.solveStep($scope.schema);
         resetSelection();
       };
 
       $scope.solveAll = function() {
-        var result = manager.solveAll($scope.schema);
-        if (result.length > 0)
+        var result = manager.solveAll($scope.schema, $scope.best);
+        if (result && result.length > 0)
           $scope.schema.cloneBy(result[0]);
-        if (result.length > 1)
+        if (result && result.length > 1)
           alert('Lo schema non è a soluzione unica!! (trovate ' + result.length + ' soluzioni)');
         resetSelection();
       };

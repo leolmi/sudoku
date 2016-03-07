@@ -8,9 +8,12 @@ angular.module('sudokuApp')
         cell.available = _.range(1, cell.dimension+1);
       }
 
-      var SudokuSchemaCell = function(n) {
+      var SudokuSchemaCell = function(n, i) {
         this.dimension = n || 9;
         this.value = null;
+        this.index = i;
+        this.x = n % 9;
+        this.y = parseInt(n / 9);
         this.fixed = false;
         this.available = [];
         this.pencil = [];
@@ -19,6 +22,9 @@ angular.module('sudokuApp')
       SudokuSchemaCell.prototype = {
         dimension: 9,
         value: null,
+        index: -1,
+        x: -1,
+        y: -1,
         fixed: false,
         available:[],
         pencil:[],
@@ -39,6 +45,12 @@ angular.module('sudokuApp')
         },
         isEmpty: function() {
           return !this.value;
+        },
+        isTwin: function(cell) {
+          return !_.difference(this.available, cell.available).length;
+        },
+        toString: function() {
+          return '{'+this.index+'} - '+this.available.join();
         }
       };
       return (SudokuSchemaCell);

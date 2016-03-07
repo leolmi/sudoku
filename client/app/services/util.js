@@ -29,8 +29,27 @@ angular.module('sudokuApp')
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
           s4() + '-' + s4() + s4() + s4();
       }
+
+      /**
+       * Rimuove gli elementi che soddisfano il predicato
+       * @param {Array} array
+       * @param {Function} predicate
+       * @returns {Array}
+       */
+      function remove(array, predicate) {
+        var e = null;
+        do {
+          if (e)
+            array.splice(array.indexOf(e), 1);
+          e = _.find(array, predicate);
+        } while (e);
+      }
+
+
+
       return {
         constants: _constants,
-        guid:guid
+        guid:guid,
+        remove:remove
       }
     }]);
