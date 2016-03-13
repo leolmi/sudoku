@@ -5,7 +5,7 @@ angular.module('sudokuApp')
     function($rootScope) {
 
       function resetAvailables(cell) {
-        cell.available = _.range(1, cell.dimension+1);
+        cell.available = cell.fixed ? [] : _.range(1, cell.dimension+1);
       }
 
       var SudokuSchemaCell = function(n, i) {
@@ -33,6 +33,9 @@ angular.module('sudokuApp')
           this.value = _.isNumber(v) && v > 0 && v <= this.dimension ? v : undefined;
           resetAvailables(this);
           $rootScope.$broadcast('cell-value-changed', this);
+        },
+        resetAvailables: function() {
+          resetAvailables(this);
         },
         removeAvailables:function(values) {
           if (this.value) {

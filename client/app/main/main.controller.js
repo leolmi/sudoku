@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .controller('MainCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema','manager','util',
-    function ($scope, $http, socket, $rootScope, SudokuSchema, manager, util) {
+  .controller('MainCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema','solver','util','generator','storage',
+    function ($scope, $http, socket, $rootScope, SudokuSchema, solver, util, generator, storage) {
 
       $scope.buttons = [{
         icon:'fa-th',
@@ -19,8 +19,10 @@ angular.module('sudokuApp')
       //$scope.schema = new SudokuSchema('005030170073016000400900000300000060004000900020000003000009002000650390037020500'); //difficile (112)
       //$scope.schema = new SudokuSchema('000070008007200003630850090060000005200643001900000060050068012100002700700030000'); //medio (86)
       //$scope.schema = new SudokuSchema('000000000000096020007080035201068700003000500009450103830040200040910000000000000'); //facile ()
-      $scope.schema = new SudokuSchema('000080000049600010002010409306700020000000000020008304601020700090001250000070000'); //? ()
-      $scope.algorithms = manager.algorithms;
+      //$scope.schema = new SudokuSchema('000080000049600010002010409306700020000000000020008304601020700090001250000070000'); //? ()
+      $scope.schema = new SudokuSchema('030000040900150800000039000790800520560000087028007014000980000007013008010000050'); //? ()
+      $scope.schema.checkResult();
+      $scope.algorithms = solver.algorithms;
 
 
       var _last = null;
@@ -29,6 +31,15 @@ angular.module('sudokuApp')
         $scope.line = ($scope.line == line) ? undefined : line;
         _last = $scope.line ? $scope.schema.cells[$scope.line.index] : null;
         if (_last) _last.highlight = true;
+      }
+
+      function loadStorage() {
+        storage.all()
+          .then(function(list) {
+            $scope.store = _.map(list, function(s){
+              return new SudokuSchema(s);
+            });
+          });
       }
 
       $scope.setPage = function(page) {
@@ -45,15 +56,15 @@ angular.module('sudokuApp')
         //TODO...
       };
 
-      $scope.managerState = manager.state;
+      $scope.solverState = solver.state;
 
       $scope.solve = function() {
-        manager.solveStep($scope.schema);
+        solver.solveStep($scope.schema);
         resetSelection();
       };
 
       $scope.solveAll = function() {
-        var result = manager.solveAll($scope.schema);
+        var result = solver.solveAll($scope.schema);
         if (result && result.length > 0)
           $scope.schema.cloneBy(result[0]);
         if (result && result.length > 1)
@@ -73,6 +84,11 @@ angular.module('sudokuApp')
         resetSelection(line);
       };
 
+      $scope.openSchema = function(schema) {
+        schema.checkResult();
+        $scope.schema = schema;
+      };
+
       $scope.getDiff = function() {
         var score = parseInt($scope.schema.getScore()) || 0;
         var sc = _.find(util.constants.scores, function(s){
@@ -87,8 +103,8 @@ angular.module('sudokuApp')
         return '[' + x + ',' + y + ']';
       };
 
-      $rootScope.$on('selected-cell-changed', function(e, current){
-        $scope.current = JSON.stringify(current, null, 2);
+      $rootScope.$on('selected-cell-changed', function(e, data){
+        $scope.current = data.current; //JSON.stringify(current, null, 2);
       });
 
       $scope.schemaButtons = [{
@@ -105,6 +121,29 @@ angular.module('sudokuApp')
         action: $scope.reset
       }];
 
+      $scope.runGenerator = function() {
+        generator.run();
+      };
+
+      $scope.stopGenerator = function() {
+        generator.stop();
+      };
+
+
+      $scope.generatorButtons = [{
+        style:'fa-play-circle',
+        tooltip: 'Avvia',
+        action: $scope.runGenerator,
+        disabled: function() { return generator.state.running; }
+      },{
+        style:'fa-stop',
+        tooltip: 'Interrompi',
+        action: $scope.stopGenerator,
+        disabled: function() { return !generator.state.running; }
+      }];
+
+
+      loadStorage();
 
       //$scope.awesomeThings = [];
       //

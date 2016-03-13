@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('manager',['SudokuSchema','$injector','SolverOptions','algorithms','util',
-    function(SudokuSchema,$injector,SolverOptions,algorithms,util) {
+  .factory('solver',['SudokuSchema','$injector','SolverOptions','algorithms','util','$rootScope','$timeout',
+    function(SudokuSchema,$injector,SolverOptions,algorithms,util,$rootScope,$timeout) {
       var _state = {
         solving: false
       };
@@ -35,6 +35,7 @@ angular.module('sudokuApp')
         _state.solving = true;
         options = new SolverOptions(options);
         _state.error = null;
+        schema.report = [];
         schema.disableLog = false;
         var schemas = [schema];
         var result = undefined;
@@ -98,6 +99,21 @@ angular.module('sudokuApp')
           return (alg.active && alg.apply(schema));
         });
       }
+
+
+      $rootScope.$on('need-tobe-solved', function(e, schema) {
+        $timeout(function() {
+          var clone = new SudokuSchema();
+          clone.cloneBy(schema);
+          var res = solveAll(clone);
+          if (res && res.length == 1) {
+            schema.report = res[0].report;
+          } else {
+            schema.report = [];
+            schema.log();
+          }
+        },0);
+      });
 
 
       return {

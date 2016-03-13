@@ -37,12 +37,7 @@ angular.module('sudokuApp')
         this.cells = [];
         var self = this;
         $rootScope.$on('cell-value-changed', function(e, cell){
-          if (self.cells.indexOf(cell)>-1) {
-            var values = self.getValues();
-            self.cells.forEach(function(c){
-              c.removeAvailables(values);
-            });
-          }
+          if (self.cells.indexOf(cell)>-1) self.refreshAvailables();
         });
       };
       SudokuSchemaGroup.prototype = {
@@ -57,6 +52,13 @@ angular.module('sudokuApp')
               values.push(parseInt(c.value));
           });
           return values;
+        },
+        refreshAvailables: function() {
+          var self = this;
+          var values = self.getValues();
+          self.cells.forEach(function(c){
+            c.removeAvailables(values);
+          });
         },
         // Restituisce vero se le celle in elenco appartengono tutte al gruppo
         contains: function(cells) {

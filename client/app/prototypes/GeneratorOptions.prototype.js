@@ -29,7 +29,7 @@ angular.module('sudokuApp')
         enhancementCycles: 100,
         difficulty: 'unknown',
         stop: {
-          type: 'manual',
+          type: 'manual', //manual,schemas
           number: 10
         }
       };

@@ -8,14 +8,20 @@ angular.module('sudokuApp')
         templateUrl: 'app/controls/sudoku/sudoku.html',
         scope: { options:'=' },
         link: function (scope, ele, atr) {
-          scope.schema = (scope.options instanceof SudokuSchema) ?
-            scope.options : new SudokuSchema(scope.options);
+          //scope.schema = (scope.options instanceof SudokuSchema) ?
+          //  scope.options : new SudokuSchema(scope.options);
+
+          scope.schema = new SudokuSchema();
           scope.structure = {
             rowrank: 3,
             colrank: 3,
             rows:new Array(scope.schema.dimension),
             cols:new Array(scope.schema.dimension)
           };
+
+          scope.$watch(function(){return scope.options; }, function(n){
+            scope.schema = n;
+          });
 
           scope.current = {
             x: 0,
@@ -46,6 +52,7 @@ angular.module('sudokuApp')
               }
               this.x = (pos % 9);
               this.y = parseInt(pos / 9);
+              $rootScope.$broadcast('selected-cell-changed', {current:scope.schema.cells[this.getLineCode()]});
             },
             isLocked:function() {
               var pos = (scope.schema.dimension * this.y + this.x);

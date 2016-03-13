@@ -15,17 +15,17 @@ angular.module('sudokuApp')
         active: true
       },{
         name:'intersections',
-        score: 1,
+        score: 2,
         proto: 'AlgorithmIntersections',
         active: true
       },{
         name:'twins',
-        score: 1,
+        score: 2,
         proto: 'AlgorithmTwins',
         active: true
       },{
         name:'try',
-        score: 40,
+        score: 100,
         proto: 'AlgorithmTry',
         active: true
       }];

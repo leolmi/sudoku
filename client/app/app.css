@@ -50,7 +50,10 @@ body {
 .as-button.checked {
   color: yellowgreen;
 }
-
+.as-button[disabled] {
+  color:#666;
+  pointer-events: none;
+}
 
 .background {
 

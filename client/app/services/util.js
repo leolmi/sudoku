@@ -4,13 +4,13 @@ angular.module('sudokuApp')
   .factory('util',[
     function() {
       var _constants = {
-        symmetries:['none','total','polar','horizontal','vertical','diagonal \\','diagonal /'],
+        symmetries:['none','total','polar','horizontal','vertical','diagonalNWSE','diagonalNESW'],
         scores:[
           {name:'unknown', max:1},
           {name:'very easy', max:80},
           {name:'easy', max:100},
-          {name:'middle', max:160},
-          {name:'hard', max:240},
+          {name:'middle', max:140},
+          {name:'hard', max:200},
           {name:'very hard', max:100000}],
         stopTypes:['manual','after']
       };

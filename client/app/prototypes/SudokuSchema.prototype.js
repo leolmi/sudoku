@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('SudokuSchema',['SudokuSchemaCell','SudokuSchemaGroup','SudokuReportLine',
-    function(SudokuSchemaCell, SudokuSchemaGroup, SudokuReportLine) {
+  .factory('SudokuSchema',['$rootScope','SudokuSchemaCell','SudokuSchemaGroup','SudokuReportLine',
+    function($rootScope, SudokuSchemaCell, SudokuSchemaGroup, SudokuReportLine) {
       function initValues(schema) {
         return new Array(schema.dimension*schema.dimension);
       }
@@ -40,36 +40,46 @@ angular.module('sudokuApp')
         }
       }
 
+      function resolve(schema) {
+        schema.report = _.map(schema.report, function(rl){
+          var line = new SudokuReportLine(rl);
+          line.load(rl);
+          return line;
+        });
+      }
+
       var SudokuSchema = function(options) {
         this.symmetry = 'none';
         this.dimension = 9;
         this.x = false;
-        this.values = initValues(this);
         this.fixed = initValues(this);
         this.score = 0;
         this.cells = [];
         this.groups = [];
         this.report = [];
         this.disableLog = false;
-        if (_.isObject(options))
+        if (_.isObject(options)) {
           _.extend(this, options);
+          resolve(this);
+        }
         build(this);
         if (_.isString(options))
           this.parse(options);
+        else if (_.isString(this.values))
+          this.parse(this.values);
       };
       SudokuSchema.prototype = {
         symmetry: 'none',
         dimension: 9,
         x: false,
-        values: [],
         fixed: [],
         score: 0,
         cells: [],
         groups: [],
         report: [],
         disableLog: false,
-        getValue: function(x,y) {
-          return this.values[(y*9)+x];
+        checkResult: function() {
+          $rootScope.$broadcast('need-tobe-solved', this);
         },
         isComplete:function() {
           return _.find(this.cells, function(c){
@@ -96,13 +106,12 @@ angular.module('sudokuApp')
             v.push((m[0]>0) ? parseInt(m[0]) : undefined);
           }
           if (v.length>0 && v.length<82) {
-            self.values = v;
             self.fixed = _.map(v, function(sv){
               return (sv>0) ? 1 : 0;
             });
           }
 
-          self.values.forEach(function(v, i){
+          v.forEach(function(v, i){
             self.cells[i].setValue(v);
           });
           self.fixed.forEach(function(v, i){
@@ -126,10 +135,26 @@ angular.module('sudokuApp')
             return _.clone(l);
           });
         },
-        reset: function() {
-          this.cells.forEach(function(c){ c.setValue(); });
-          this.cells.forEach(function(c){ c.setValue(); });
-          this.report = [];
+        reset: function(all) {
+          var self = this;
+          self.cells.forEach(function(c){
+            if (!c.fixed || all) {
+              c.value = null;
+              c.resetAvailables();
+              c.pencil = [];
+            }
+          });
+          if (all) {
+            self.fixed = initValues(this);
+          } else {
+            self.fixed.forEach(function (f, i) {
+              if (f > 0)
+                self.cells[i].setValue(f);
+            });
+          }
+          self.groups.forEach(function(g) {
+            g.refreshAvailables();
+          });
         },
         getScore: function() {
           var self = this;
@@ -188,6 +213,11 @@ angular.module('sudokuApp')
           });
 
           return twins;
+        },
+        fixedCount: function() {
+          var count = 0;
+          this.fixed.forEach(function(v){ if (v) count++; });
+          return count;
         },
         // Restituisce tutti i gruppi che contengono tutte le celle in elenco
         getGroups: function(cells) {

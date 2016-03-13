@@ -50,6 +50,7 @@ angular.module('sudokuApp')
           var cell = cells[cells.length-1];
           var index = schema.cells.indexOf(cell);
           cell.setValue(last.cells[index].value);
+          schema.log(self, cell);
           return true;
         }
         return false;
