@@ -1,17 +1,17 @@
 'use strict';
 
-var express = require('express');
-var controller = require('./schema.controller');
-var config = require('../../config/environment');
-var auth = require('../../auth/auth.service');
+const express = require('express');
+const controller = require('./schema.controller');
+const config = require('../../config/environment');
+const auth = require('../../auth/auth.service');
 
-var router = express.Router();
+const router = express.Router();
 
 router.get('/', controller.index);
 router.get('/:id', controller.show);
-router.post('/', controller.generate);
-router.put('/:id', auth.hasRole('admin'), controller.update);
-router.patch('/:id', controller.update);
+router.put('/', auth.isAuthenticated(), controller.save);
+router.patch('/', auth.isAuthenticated(), controller.save);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
+router.post('/generate', controller.generate);
 
 module.exports = router;

@@ -1,8 +1,8 @@
 'use strict';
 
-var u = require('../utilities/util');
-var _ = require('lodash');
-var Schema = require('./schema.model');
+const u = require('../utilities/util');
+const _ = require('lodash');
+const Schema = require('./schema.model');
 
 // Get list of schemas
 exports.index = function(req, res) {
@@ -14,17 +14,20 @@ exports.show = function(req, res) {
   return u.get(Schema, req, res);
 };
 
-// Generate one or more schemas
-exports.generate = function(req, res) {
-  //TODO: ....
-};
-
 // Updates an existing schema in the DB.
-exports.update = function(req, res) {
-  //TODO: ....
+exports.save = function(req, res) {
+  return u.save(Schema, req, res);
 };
 
 // Deletes a schema from the DB.
 exports.destroy = function(req, res) {
-  //TODO: ....
+  return u.destroy(Schema, req, res);
+};
+
+// Generate one or more schemas
+exports.generate = function(req, res) {
+  //TODO: generazione di schemi sudoku
+  // - validazione parametri di input (opzioni)
+  // - generazione di token di risoluzione
+  // - avvio procedura di generazione
 };

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .controller('MainCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema','solver','util','generator','storage',
+  .controller('TestCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema','solver','util','generator','storage',
     function ($scope, $http, socket, $rootScope, SudokuSchema, solver, util, generator, storage) {
 
       $scope.buttons = [{
@@ -64,7 +64,7 @@ angular.module('sudokuApp')
       };
 
       $scope.solveAll = function() {
-        var result = solver.solveAll($scope.schema);
+        const result = solver.solveAll($scope.schema);
         if (result && result.length > 0)
           $scope.schema.cloneBy(result[0]);
         if (result && result.length > 1)
@@ -90,16 +90,16 @@ angular.module('sudokuApp')
       };
 
       $scope.getDiff = function() {
-        var score = parseInt($scope.schema.getScore()) || 0;
-        var sc = _.find(util.constants.scores, function(s){
+        const score = parseInt($scope.schema.getScore()) || 0;
+        const sc = _.find(util.constants.scores, function(s){
           return s.max > score;
         });
         return sc.name;
       };
 
       $scope.getCell = function(line) {
-        var x = (line.index % $scope.schema.dimension) + 1;
-        var y = parseInt(line.index / $scope.schema.dimension) + 1;
+        const x = (line.index % $scope.schema.dimension) + 1;
+        const y = parseInt(line.index / $scope.schema.dimension) + 1;
         return '[' + x + ',' + y + ']';
       };
 
@@ -128,7 +128,6 @@ angular.module('sudokuApp')
       $scope.stopGenerator = function() {
         generator.stop();
       };
-
 
       $scope.generatorButtons = [{
         style:'fa-play-circle',

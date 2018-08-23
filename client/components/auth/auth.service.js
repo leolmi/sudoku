@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q) {
+  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookies, $q) {
     var currentUser = {};
-    if($cookieStore.get('token')) {
+    if($cookies.get('token')) {
       currentUser = User.get();
     }
 
@@ -17,20 +17,18 @@ angular.module('sudokuApp')
        * @return {Promise}
        */
       login: function(user, callback) {
-        var cb = callback || angular.noop;
-        var deferred = $q.defer();
+        const cb = callback || angular.noop;
+        const deferred = $q.defer();
 
         $http.post('/auth/local', {
           email: user.email,
           password: user.password
-        }).
-        success(function(data) {
-          $cookieStore.put('token', data.token);
+        }).then(function(data) {
+          $cookies.put('token', data.token);
           currentUser = User.get();
           deferred.resolve(data);
           return cb();
-        }).
-        error(function(err) {
+        }, function(err) {
           this.logout();
           deferred.reject(err);
           return cb(err);
@@ -41,11 +39,9 @@ angular.module('sudokuApp')
 
       /**
        * Delete access token and user info
-       *
-       * @param  {Function}
        */
       logout: function() {
-        $cookieStore.remove('token');
+        $cookies.remove('token');
         currentUser = {};
       },
 
@@ -61,11 +57,10 @@ angular.module('sudokuApp')
 
         return User.save(user,
           function(data) {
-            $cookieStore.put('token', data.token);
+            $cookies.put('token', data.token);
             currentUser = User.get();
             return cb(user);
-          },
-          function(err) {
+          }, function(err) {
             this.logout();
             return cb(err);
           }.bind(this)).$promise;
@@ -140,7 +135,7 @@ angular.module('sudokuApp')
        * Get auth token
        */
       getToken: function() {
-        return $cookieStore.get('token');
+        return $cookies.get('token');
       }
     };
   });

@@ -1,4 +1,4 @@
 # SUDOKU #
 
-###INFO###
+### INFO
 Ennesimo sudoku ...

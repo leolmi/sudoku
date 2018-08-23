@@ -1,0 +1,21 @@
+.sudoku-navbar {
+  height: 40px;
+  line-height: 40px;
+  margin-bottom: 20px;
+  .container > * {
+    display: inline-flex;
+  }
+  .sudoku-navbar-header {
+    .sudoku-navbar-brand {
+      font-size: 1.6em;
+      text-transform: uppercase;
+    }
+  }
+  .sudoku-navbar-collapse:not(.collapsed) {
+    float: right;
+    .sudoku-navbar-items > * {
+      margin: auto 10px;
+      display: inline-flex;
+    }
+  }
+}

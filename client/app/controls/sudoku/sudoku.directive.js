@@ -72,33 +72,39 @@ angular.module('sudokuApp')
             }, 100);
           }
 
-          ele.bind("keydown keypress", function (event) {
+          function move(e, code) {
+            e.preventDefault();
+            deferExec(function() {
+              scope.current.move(code||(e.which - 37));
+            });
+          }
+
+          ele.bind("keydown keypress", function (e) {
             // numerici da 0 a 9
-            if (event.which>47 && event.which<58){
-              event.preventDefault();
+            if (e.which>47 && e.which<58){
+              e.preventDefault();
               deferExec(function() {
-                scope.current.setValue(event.which-48);
+                scope.current.setValue(e.which-48);
               });
-            }
-            else {
-              switch(event.which) {
+            } else {
+              //console.log('KEY CODE=%s', e.which);
+              switch(e.which) {
+                case 13:
+                  return move(e, 2);
                 case 37: //left
                 case 38: //up
                 case 39: //right
                 case 40: //down
-                  event.preventDefault();
-                  return deferExec(function() {
-                    scope.current.move(event.which - 37);
-                  });
+                  return move(e);
                 //case 27: //escape (toglie la selezione)
                 case 46: //delete (svuota la cella)
                 case 8: //backspace (svuota la cella)
-                  event.preventDefault();
+                  e.preventDefault();
                   return deferExec(function() {
                     scope.current.setValue(0);
                   });
                 case 107:
-                  event.preventDefault();
+                  e.preventDefault();
                   return deferExec(function() {
                     scope.current.toggle();
                   });

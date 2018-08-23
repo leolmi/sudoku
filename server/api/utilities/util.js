@@ -30,8 +30,10 @@
  226 IM Used (RFC 3229)
  */
 
-var _ = require('lodash');
-var noop = function() {};
+const _ = require('lodash');
+const noop = function() {};
+exports.noop = noop;
+
 
 /**
  * Return standard 200
@@ -40,7 +42,7 @@ var noop = function() {};
  * @param cb
  * @returns {*}
  */
-var ok = function(res, obj, cb) {
+const ok = function(res, obj, cb) {
   cb = cb || noop;
   res.json(200, obj);
   return cb(obj);
@@ -54,7 +56,7 @@ exports.ok = ok;
  * @param cb
  * @returns {*}
  */
-var created = function(res, obj, cb) {
+const created = function(res, obj, cb) {
   cb = cb || noop;
   res.json(201, obj);
   return cb(obj);
@@ -68,7 +70,7 @@ exports.created = created;
  * @param cb
  * @returns {*}
  */
-var deleted = function(res, obj, cb) {
+const deleted = function(res, obj, cb) {
   cb = cb || noop;
   res.json(204);
   return cb(obj);
@@ -80,7 +82,7 @@ exports.deleted = deleted;
  * @param res
  * @returns {*}
  */
-var notfound = function(res) {return res.send(404); };
+const notfound = function(res) {return res.send(404); };
 exports.notfound = notfound;
 
 /**
@@ -101,13 +103,25 @@ exports.error = error;
  * @param message
  * @param err
  */
-var log = function(message, err) {
+const log = function(message, err) {
   var errmsg = '';
-  if (err && typeof err == 'string') errmsg = err;
+  if (err && typeof err === 'string') errmsg = err;
   else if (err) errmsg = JSON.stringify(err);
   console.log(message + ' ' + errmsg);
 };
 exports.log = log;
+
+
+
+const create = function(schema, req, res, cb) {
+  cb = cb || noop;
+  schema.create(req.body, function(err, obj) {
+    if(err) { return error(res, err); }
+    return created(res, obj, cb);
+  });
+};
+exports.create = create;
+
 
 /**
  * Aggiorna l'elemento ricercato per id
@@ -150,11 +164,42 @@ exports.update = function(schema, req, res, customize, cb, verbose) {
   });
 };
 
-exports.create = function(schema, req, res, cb) {
+/**
+ * Salva o crea l'elemento
+ * @param schema
+ * @param req
+ * @param res
+ * @param {Function} customize
+ * @param {Function} cb
+ * @param {Boolean} [verbose]
+ */
+exports.save = function(schema, req, res, customize, cb, verbose) {
   cb = cb || noop;
-  schema.create(req.body, function(err, obj) {
-    if(err) { return error(res, err); }
-    return created(res, obj, cb);
+  if (!!verbose) console.log('[SAVE] - body: ' + JSON.stringify(req.body));
+  const o = req.body;
+  if (!_.isObject(o)) return error(res, 'Undefined object to save!');
+  if (!o._id) return create(schema, req, res, cb);
+  schema.findById(o._id, function (err, obj) {
+    if (err) {
+      if (!!verbose) console.log('[SAVE.ERROR] Schema dati: "' + schema.modelName + '", ' + err.message);
+      return error(res, err);
+    }
+    if (!obj) return create(schema, req, res, cb);
+    if (!!verbose) console.log('[SAVE] - before merge: ' + JSON.stringify(obj));
+    const updated = _.merge(obj, o, function (a, b) {
+      return _.isArray(a) ? b : undefined;
+    });
+    updated.__v = obj.__v;
+    if (customize)
+      customize(updated);
+    if (!!verbose) console.log('[SAVE] - after merge: ' + JSON.stringify(updated));
+    updated.save(function (err) {
+      if (err) {
+        if (!!verbose) console.log('[SAVE.MONGO.ERROR] - save: ' + err.message);
+        return error(res, err);
+      }
+      return ok(res, obj, cb);
+    });
   });
 };
 

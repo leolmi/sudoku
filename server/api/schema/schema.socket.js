@@ -1,6 +1,6 @@
 'use strict';
 
-var Schema = require('./schema.model');
+const Schema = require('./schema.model');
 
 exports.register = function(socket) {
   Schema.schema.post('save', function (doc) {

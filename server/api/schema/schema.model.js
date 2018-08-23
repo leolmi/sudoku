@@ -1,9 +1,9 @@
 'use strict';
 
-var mongoose = require('mongoose'),
+const mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
-var SchemaReportLine = new Schema({
+const SchemaReportLine = new Schema({
   alg: String,
   score: Number,
   value: Number,
@@ -11,13 +11,14 @@ var SchemaReportLine = new Schema({
   index: Number
 });
 
-var SchemaSchema = new Schema({
+const SchemaSchema = new Schema({
   symmetry: String,
   dimension: Number,
   x: Boolean,
   values: String,
   score: Number,
-  report: [SchemaReportLine]
+  report: [SchemaReportLine],
+  meta: Schema.Types.Mixed
 });
 
 module.exports = mongoose.model('Schema', SchemaSchema);

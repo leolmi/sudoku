@@ -1,0 +1,16 @@
+.sudoku-navbar {
+  height: 40px;
+  line-height: 40px;
+  margin-bottom: 20px; }
+  .sudoku-navbar .container > * {
+    display: inline-flex; }
+  .sudoku-navbar .sudoku-navbar-header .sudoku-navbar-brand {
+    font-size: 1.6em;
+    text-transform: uppercase; }
+  .sudoku-navbar .sudoku-navbar-collapse:not(.collapsed) {
+    float: right; }
+    .sudoku-navbar .sudoku-navbar-collapse:not(.collapsed) .sudoku-navbar-items > * {
+      margin: auto 10px;
+      display: inline-flex; }
+
+/*# sourceMappingURL=navbar.css.map */

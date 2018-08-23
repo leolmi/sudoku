@@ -7,27 +7,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="/">
-    <title>giureku</title>
+    <title>SDK</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(client) app/vendor.css -->
-      <!-- bower:css -->
-      <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-      <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css({.tmp,client}) app/app.css -->
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css" />
+
     <link rel="stylesheet" href="app/app.css">
-      <!-- injector:css -->
-      <link rel="stylesheet" href="app/account/login/login.css">
-      <link rel="stylesheet" href="app/admin/admin.css">
-      <link rel="stylesheet" href="app/app.css">
-      <link rel="stylesheet" href="app/controls/sudoku/sudoku.css">
-      <link rel="stylesheet" href="app/main/main.css">
-      <link rel="stylesheet" href="components/modal/modal.css">
-      <!-- endinjector -->
-    <!-- endbuild -->
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="app/account/login/login.css">
+    <link rel="stylesheet" href="app/admin/admin.css">
+    <link rel="stylesheet" href="app/controls/sudoku/sudoku.css">
+    <link rel="stylesheet" href="app/test/test.css">
+    <link rel="stylesheet" href="app/editor/editor.css">
+    <link rel="stylesheet" href="components/modal/modal.css">
+    <link rel="stylesheet" href="components/navbar/navbar.css">
+    <link rel="stylesheet" href="components/schema/schema.css">
+    <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css" />
   </head>
   <body ng-app="sudokuApp">
     <!--[if lt IE 7]>
@@ -35,7 +30,9 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div ui-view=""></div>
+    <sudoku-background></sudoku-background>
+    <sudoku-nav-bar></sudoku-nav-bar>
+    <div class="view-container" ui-view=""></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
@@ -49,60 +46,67 @@
     </script>
 
     <!--[if lt IE 9]>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <script src="../node_modules/es5-shim/es5-shim.js"></script>
+    <script src="../node_modules/json3/lib/json3.min.js"></script>
     <![endif]-->
-    <!-- build:js({client,node_modules}) app/vendor.js -->
-      <!-- bower:js -->
-      <script src="bower_components/jquery/dist/jquery.js"></script>
-      <script src="bower_components/angular/angular.js"></script>
-      <script src="bower_components/angular-resource/angular-resource.js"></script>
-      <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-      <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-      <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-      <script src="bower_components/lodash/dist/lodash.compat.js"></script>
-      <script src="bower_components/angular-socket-io/socket.js"></script>
-      <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-      <!-- endbower -->
-      <script src="socket.io-client/socket.io.js"></script>
-    <!-- endbuild -->
 
-        <!-- build:js({.tmp,client}) app/app.js -->
-        <script src="app/app.js"></script>
-          <!-- injector:js -->
-          <script src="app/account/account.js"></script>
-          <script src="app/account/login/login.controller.js"></script>
-          <script src="app/account/settings/settings.controller.js"></script>
-          <script src="app/account/signup/signup.controller.js"></script>
-          <script src="app/admin/admin.controller.js"></script>
-          <script src="app/admin/admin.js"></script>
-          <script src="app/controls/sudoku/sudoku.directive.js"></script>
-          <script src="app/main/main.controller.js"></script>
-          <script src="app/main/main.js"></script>
-          <script src="app/prototypes/Algorithm.prototype.js"></script>
-          <script src="app/prototypes/AlgorithmIntersections.prototype.js"></script>
-          <script src="app/prototypes/AlgorithmSingleCell.prototype.js"></script>
-          <script src="app/prototypes/AlgorithmSingleValue.prototype.js"></script>
-          <script src="app/prototypes/AlgorithmTry.prototype.js"></script>
-          <script src="app/prototypes/AlgorithmTwins.prototype.js"></script>
-          <script src="app/prototypes/GeneratorOptions.prototype.js"></script>
-          <script src="app/prototypes/SolverOptions.prototype.js"></script>
-          <script src="app/prototypes/SudokuReportLine.prototype.js"></script>
-          <script src="app/prototypes/SudokuSchema.prototype.js"></script>
-          <script src="app/prototypes/SudokuSchemaCell.prototype.js"></script>
-          <script src="app/prototypes/SudokuSchemaGroup.prototype.js"></script>
-          <script src="app/services/algorithm.provider.js"></script>
-          <script src="app/services/generator.service.js"></script>
-          <script src="app/services/solver.service.js"></script>
-          <script src="app/services/storage.service.js"></script>
-          <script src="app/services/util.js"></script>
-          <script src="components/auth/auth.service.js"></script>
-          <script src="components/auth/user.service.js"></script>
-          <script src="components/modal/modal.service.js"></script>
-          <script src="components/mongoose-error/mongoose-error.directive.js"></script>
-          <script src="components/navbar/navbar.controller.js"></script>
-          <script src="components/socket/socket.service.js"></script>
-          <!-- endinjector -->
-        <!-- endbuild -->
-</body>
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="../node_modules/angular/angular.js"></script>
+    <script src="../node_modules/angular-resource/angular-resource.js"></script>
+    <script src="../node_modules/angular-cookies/angular-cookies.js"></script>
+    <script src="../node_modules/angular-sanitize/angular-sanitize.js"></script>
+    <script src="../node_modules/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="../node_modules/lodash/lodash.js"></script>
+    <script src="../node_modules/angular-socket-io/socket.js"></script>
+    <script src="../node_modules/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="../node_modules/angular-ui-router/release/stateEvents.js"></script>
+    <script src="socket.io-client/socket.io.js"></script>
+
+    <script src="app/app.js"></script>
+
+    <script src="app/account/account.js"></script>
+    <script src="app/account/login/login.controller.js"></script>
+    <script src="app/account/settings/settings.controller.js"></script>
+    <script src="app/account/signup/signup.controller.js"></script>
+    <script src="app/admin/admin.controller.js"></script>
+    <script src="app/admin/admin.js"></script>
+    <script src="app/controls/sudoku/sudoku.directive.js"></script>
+    <script src="app/test/test.controller.js"></script>
+    <script src="app/test/test.js"></script>
+    <script src="app/editor/editor.service.js"></script>
+    <script src="app/editor/editor.controller.js"></script>
+    <script src="app/editor/editor.js"></script>
+    <script src="app/engine/engine.js"></script>
+    <script src="app/engine/engine.controller.js"></script>
+    <script src="app/prototypes/Algorithm.prototype.js"></script>
+    <script src="app/prototypes/AlgorithmIntersections.prototype.js"></script>
+    <script src="app/prototypes/AlgorithmSingleCell.prototype.js"></script>
+    <script src="app/prototypes/AlgorithmSingleValue.prototype.js"></script>
+    <script src="app/prototypes/AlgorithmTry.prototype.js"></script>
+    <script src="app/prototypes/AlgorithmTwins.prototype.js"></script>
+    <script src="app/prototypes/GeneratorOptions.prototype.js"></script>
+    <script src="app/prototypes/SolverOptions.prototype.js"></script>
+    <script src="app/prototypes/SudokuReportLine.prototype.js"></script>
+    <script src="app/prototypes/SudokuSchema.prototype.js"></script>
+    <script src="app/prototypes/SudokuSchemaCell.prototype.js"></script>
+    <script src="app/prototypes/SudokuSchemaGroup.prototype.js"></script>
+    <script src="app/services/algorithm.provider.js"></script>
+    <script src="app/services/generator.service.js"></script>
+    <script src="app/services/solver.service.js"></script>
+    <script src="app/services/storage.service.js"></script>
+    <script src="app/services/util.js"></script>
+
+    <script src="components/auth/auth.service.js"></script>
+    <script src="components/auth/user.service.js"></script>
+    <script src="components/modal/modal.service.js"></script>
+    <script src="components/mongoose-error/mongoose-error.directive.js"></script>
+    <script src="components/mresize/mresize.min.js"></script>
+    <script src="components/navbar/navbar.directive.js"></script>
+    <script src="components/socket/socket.service.js"></script>
+    <script src="components/sudoku-background/sudoku-background.service.js"></script>
+    <script src="components/sudoku-background/sudoku-background.directive.js"></script>
+    <script src="components/schema/schema.service.js"></script>
+    <script src="components/schema/schema.directive.js"></script>
+  </body>
 </html>
