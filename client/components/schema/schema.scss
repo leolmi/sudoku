@@ -17,9 +17,37 @@ schema {
         &.current {
           fill: rgba(64, 89, 250, 0.7) !Important;
         }
+        &.error {
+          fill: rgba(250, 0, 1, 0.7) !Important;
+        }
+        //&.fixed {
+        //  fill: #111 !Important;
+        //}
+      }
+      .schema-cell-text {
+        pointer-events: none;
+        fill: none;
+        stroke: #111;
+        stroke-width: 2px;
+        &.fixed {
+          //fill: #004085 !Important;
+          //fill: none !Important;
+          //stroke: #000;
+          stroke: none !Important;
+          fill: #111 !important;
+        }
       }
       .schema-group {
         fill: rgba(10, 10, 10, 0.2) !important;
+      }
+      &.drawing {
+        .schema-board {
+          fill: rgba(255, 229, 184, 0.8) !important;
+        }
+        .schema-cell-text {
+          fill: orangered !important;
+          stroke: none !important;
+        }
       }
     }
   }

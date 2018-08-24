@@ -3,11 +3,11 @@
 angular.module('sudokuApp')
   .factory('solver',['SudokuSchema','$injector','SolverOptions','algorithms','util','$rootScope','$timeout',
     function(SudokuSchema,$injector,SolverOptions,algorithms,util,$rootScope,$timeout) {
-      var _state = {
+      const _state = {
         solving: false
       };
-      var _algorithms = _.map(algorithms.availableAlgorithms, function(a){
-        var ctor = $injector.get(a.proto);
+      const _algorithms = _.map(algorithms.availableAlgorithms, function(a){
+        const ctor = $injector.get(a.proto);
         return new ctor(a);
       });
 
@@ -37,8 +37,8 @@ angular.module('sudokuApp')
         _state.error = null;
         schema.report = [];
         schema.disableLog = false;
-        var schemas = [schema];
-        var result = undefined;
+        const schemas = [schema];
+        let result = undefined;
         try {
           result = solveSchemas(schemas, options);
           _state.solving = false;
@@ -53,12 +53,12 @@ angular.module('sudokuApp')
       /**
        * Risolve tutti gli schemi autogenerati
        * @param schemas
-       * @param [best]
+       * @param [options]
        * @returns {Array}
        */
       function solveSchemas(schemas, options) {
         do {
-          var forks = [];
+          const forks = [];
           schemas.forEach(function (s) {
             //cerca il primo algoritmo che riesce a risolvere
             _.find(_algorithms, function (alg) {
@@ -73,13 +73,13 @@ angular.module('sudokuApp')
         } while (schemas.length < options.maxSchemas && !areComplete(schemas));
 
         //restituisce l'elenco degli schemi completati
-        var solutions = _(schemas)
+        const solutions = _(schemas)
           .each(function (s) {s.getScore();})
           .filter(function (s) {return s.isComplete();})
           .groupBy(function (s) {return s.toString();})
           .value();
 
-        var result = [];
+        const result = [];
         _.keys(solutions).forEach(function (s) {
           result.push(_(solutions[s])
             .sortBy('score')
@@ -103,10 +103,10 @@ angular.module('sudokuApp')
 
       $rootScope.$on('need-tobe-solved', function(e, schema) {
         $timeout(function() {
-          var clone = new SudokuSchema();
+          const clone = new SudokuSchema();
           clone.cloneBy(schema);
-          var res = solveAll(clone);
-          if (res && res.length == 1) {
+          const res = solveAll(clone);
+          if (res && res.length === 1) {
             schema.report = res[0].report;
           } else {
             schema.report = [];

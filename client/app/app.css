@@ -40,12 +40,14 @@ body {
 
 .as-button {
   cursor: pointer;
+  -webkit-transition: all .5s;
+  transition: all .5s;
 }
 .as-button:focus {
   outline: none;
 }
 .as-button:hover {
-  color: orange;
+  color: #ddd;
 }
 .as-button.checked {
   color: yellowgreen;
@@ -81,6 +83,11 @@ sudoku-background .sudoku-background {
   background-position: center;
 }
 
+.min-80 {min-width: 80px;}
+
+.blur {
+  filter: blur(8px);
+}
 
 .view-container {
   overflow: hidden;

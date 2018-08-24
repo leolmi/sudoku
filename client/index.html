@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="components/modal/modal.css">
     <link rel="stylesheet" href="components/navbar/navbar.css">
     <link rel="stylesheet" href="components/schema/schema.css">
+    <link rel="stylesheet" href="components/sudoku-menu/sudoku-menu.css">
     <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css" />
   </head>
   <body ng-app="sudokuApp">
@@ -32,7 +33,9 @@
     <!-- Add your site or application content here -->
     <sudoku-background></sudoku-background>
     <sudoku-nav-bar></sudoku-nav-bar>
-    <div class="view-container" ui-view=""></div>
+    <sudoku-menu></sudoku-menu>
+    <!--<div class="view-container" ng-class="{'blur': state.menu}" ui-view=""></div>-->
+    <div class="view-container" ng-hide="state.menu" ui-view=""></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
@@ -74,7 +77,6 @@
     <script src="app/controls/sudoku/sudoku.directive.js"></script>
     <script src="app/test/test.controller.js"></script>
     <script src="app/test/test.js"></script>
-    <script src="app/editor/editor.service.js"></script>
     <script src="app/editor/editor.controller.js"></script>
     <script src="app/editor/editor.js"></script>
     <script src="app/engine/engine.js"></script>
@@ -95,6 +97,7 @@
     <script src="app/services/generator.service.js"></script>
     <script src="app/services/solver.service.js"></script>
     <script src="app/services/storage.service.js"></script>
+    <script src="app/services/sudoku.service.js"></script>
     <script src="app/services/util.js"></script>
 
     <script src="components/auth/auth.service.js"></script>
@@ -106,7 +109,7 @@
     <script src="components/socket/socket.service.js"></script>
     <script src="components/sudoku-background/sudoku-background.service.js"></script>
     <script src="components/sudoku-background/sudoku-background.directive.js"></script>
-    <script src="components/schema/schema.service.js"></script>
+    <script src="components/sudoku-menu/sudoku-menu.directive.js"></script>
     <script src="components/schema/schema.directive.js"></script>
   </body>
 </html>

@@ -1,0 +1,19 @@
+<div class="sudoku-menu" ng-if="state.menu">
+  <div class="container">
+    <div class="row" ng-repeat="b in buttons">
+      <div class="col"></div>
+      <div class="col-6 menu-item" ng-click="b.click($event)">
+        <div class="row">
+          <div class="col-2 min-80">
+            <i class="fa fa-4x" ng-class="b.icon"></i>
+          </div>
+          <div class="col">
+            <div class="menu-item-title">{{b.title}}</div>
+            <div class="menu-item-desc">{{b.desc}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col"></div>
+    </div>
+  </div>
+</div>

@@ -45,11 +45,26 @@ angular.module('sudokuApp')
         } while (e);
       }
 
-
+      /**
+       * Apply checking $digest
+       * @param scope
+       * @param fn
+       */
+      function safeApply(scope, fn) {
+        var phase = scope.$root.$$phase;
+        if (phase === '$apply' || phase === '$digest') {
+          if (fn && (typeof(fn) === 'function')) {
+            fn();
+          }
+        } else {
+          scope.$apply(fn);
+        }
+      }
 
       return {
         constants: _constants,
         guid:guid,
+        safeApply: safeApply,
         remove:remove
       }
     }]);

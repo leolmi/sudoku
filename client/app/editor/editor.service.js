@@ -4,14 +4,6 @@ angular.module('sudokuApp')
   .factory('editorService', [
     function() {
       const _state = {};
-      function getInfo() {
-        return {
-          w: 9,
-          h: 9,
-          wg: 3,
-          hg: 3
-        }
-      }
 
       function setValue() {}
       function move() {}

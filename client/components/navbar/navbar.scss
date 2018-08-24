@@ -11,11 +11,8 @@
       text-transform: uppercase;
     }
   }
-  .sudoku-navbar-collapse:not(.collapsed) {
+  .sudoku-menu-button {
     float: right;
-    .sudoku-navbar-items > * {
-      margin: auto 10px;
-      display: inline-flex;
-    }
+    line-height: 44px;
   }
 }

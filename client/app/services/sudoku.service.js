@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('schemaService', ['SudokuSchema',
+  .factory('sudokuService', ['SudokuSchema',
     function(SudokuSchema) {
       const _state = {
         drawing: false,
+        menu: false,
         schema: new SudokuSchema('005030170073016000400900000300000060004000900020000003000009002000650390037020500')
       };
       function setValue(value) {

@@ -55,8 +55,9 @@ angular.module('sudokuApp')
               $rootScope.$broadcast('selected-cell-changed', {current:scope.schema.cells[this.getLineCode()]});
             },
             isLocked:function() {
-              var pos = (scope.schema.dimension * this.y + this.x);
-              return scope.schema.fixed[pos];
+              return scope.schema.cell(this.x, this.y).fixed;
+              // var pos = (scope.schema.dimension * this.y + this.x);
+              // return scope.schema.fixed[pos];
             },
             toggle:function() {
               var pos = (scope.schema.dimension * this.y + this.x);
