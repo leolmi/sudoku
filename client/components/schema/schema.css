@@ -6,6 +6,8 @@ schema {
       height: 100%;
       margin: auto;
       position: relative; }
+      schema .schema-container #schema-canvas .schema-line {
+        stroke: rgba(10, 10, 10, 0.85); }
       schema .schema-container #schema-canvas .schema-cell {
         cursor: pointer;
         -webkit-transition: all 1s;
@@ -21,7 +23,7 @@ schema {
         pointer-events: none;
         fill: none;
         stroke: #111;
-        stroke-width: 2px; }
+        stroke-width: 1px; }
         schema .schema-container #schema-canvas .schema-cell-text.fixed {
           stroke: none !Important;
           fill: #111 !important; }

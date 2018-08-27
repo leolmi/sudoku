@@ -1,3 +1,20 @@
-<div class="sudoku-editor">
-  <schema options="schemaOptions""></schema>
+<div class="row sudoku-editor">
+  <div class="col schemas-col">
+    <div class="row schema-find-row">
+      <!-- ricerca schemi -->
+    </div>
+    <div class="row schemas-list">
+      <!-- comandi schema (nuovo/cancella/risolvi) -->
+      <!-- elenco schemi -->
+      <div class="schema-item" ng-repeat="s in state.schemas" ng-click="open(s)">
+        {{s.name}}
+      </div>
+    </div>
+  </div>
+  <div class="col editor-col">
+    <schema options="schemaOptions""></schema>
+  </div>
+  <div class="col">
+    <!-- opzioni?? -->
+  </div>
 </div>

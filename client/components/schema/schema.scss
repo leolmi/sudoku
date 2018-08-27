@@ -6,6 +6,9 @@ schema {
       height: 100%;
       margin: auto;
       position: relative;
+      .schema-line {
+        stroke:rgba(10,10,10, .85);
+      }
       .schema-cell {
         cursor: pointer;
         -webkit-transition: all 1s;
@@ -28,7 +31,7 @@ schema {
         pointer-events: none;
         fill: none;
         stroke: #111;
-        stroke-width: 2px;
+        stroke-width: 1px;
         &.fixed {
           //fill: #004085 !Important;
           //fill: none !Important;

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('sudokuService', ['SudokuSchema',
-    function(SudokuSchema) {
+  .factory('sudokuService', ['SudokuSchema','popupService',
+    function(SudokuSchema, popupService) {
       const _state = {
         drawing: false,
         menu: false,
@@ -40,11 +40,29 @@ angular.module('sudokuApp')
         console.log('current cell: %s,%s', x+1, y+1);
       }
 
+
+
+      function open(schema) {
+        if (_state.schema.isDoing()) {
+          popupService.show({
+            title: 'Open new schema?',
+            text: 'Current schema will be discard',
+            ok: 'OK',
+            cancel: 'Cancel'
+          }).then(function() {
+            _state.schema = new SudokuSchema(schema);
+          });
+        } else {
+          _state.schema = new SudokuSchema(schema);
+        }
+      }
+
       return {
         state: _state,
         setValue: setValue,
         select: select,
         move: move,
-        toggle: toggle
+        toggle: toggle,
+        open: open
       }
     }]);

@@ -12,6 +12,7 @@ const SchemaReportLine = new Schema({
 });
 
 const SchemaSchema = new Schema({
+  name: String,
   symmetry: String,
   dimension: Number,
   x: Boolean,

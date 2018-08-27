@@ -1,0 +1,18 @@
+.popup-message {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  background-color: rgba(200, 200, 200, 0.9);
+  color: #111;
+  z-index: 1000; }
+  .popup-message .popup-message-title {
+    font-weight: bold;
+    font-size: 1.4em;
+    margin-top: 30vh; }
+  .popup-message .popup-message-toolbar {
+    margin-top: 20px; }
+    .popup-message .popup-message-toolbar > .btn {
+      margin: 10px; }
+
+/*# sourceMappingURL=popup-message.css.map */

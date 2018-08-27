@@ -1,6 +1,19 @@
 .sudoku-editor {
   schema {
-    width: 100vw;
+    //width: 100vw;
     height: 80vh;
+  }
+  .editor-col {
+    min-width: 500px;
+  }
+  .schema-item {
+    width: 100%;
+    margin-left: 25px;
+    padding: 4px 10px;
+    font-variant: small-caps;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(250,250,205,.2);
+    }
   }
 }

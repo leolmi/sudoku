@@ -100,15 +100,17 @@ angular.module('sudokuApp')
             const gw = size / info.rank;
             const dwb = dw*PRC;
             const fs = (dw*.9).toFixed(0);
+            // BACKGROUND
             var content = '<rect class="schema-board" x="0" y="0" width="'+size+'" height="'+size+'" style="fill:rgba(200,200,200,.8)" />';
-            for(var x = 1;x < info.rank; x++) {
-              const rx = gw * x;
-              content += '<rect class="schema-group" x="' + (rx - dwb) + '" y="0" width="' + (2 * dwb) + '" height="' + size + '" />';
+            // LINES
+            for(var s = 1;s < info.dimension; s++) {
+              const dx = s * dw;
+              const dy = s * dh;
+              const w = s % info.rank === 0 ? 3 : 1;
+              content += '<line class="schema-line" x1="' + dx + '" y1="0" x2="' + dx + '" y2="' + size + '" style="stroke-width:' + w + '" />' +
+                '<line class="schema-line" x1="0" y1="' + dy + '" x2="' + size + '" y2="' + dy + '" style="stroke-width:' + w + '" />';
             }
-            for (var y = 1; y < info.rank; y++) {
-              const ry = gh * y;
-              content += '<rect class="schema-group" x="0" y="' + (ry - dwb) + '" width="' + size + '" height="' + (2 * dwb) + '" />';
-            }
+            // BOARD
             for(var x = 0;x < info.dimension; x++) {
               for (var y = 0; y < info.dimension; y++) {
                 const rx = dw * x;
@@ -120,6 +122,7 @@ angular.module('sudokuApp')
                   'dominant-baseline="middle" style="font-size:'+fs+'px;">{{state.schema.cell('+x+','+y+').text()}}</text>';
               }
             }
+            // COMPONENT
             const svg = '<svg ng-attr-height="'+size+'px" ng-attr-width="'+size+'px" style="height:'+size+'px;width:'+size+'px;display:block;margin:auto;">' + content + '</svg>';
             const sch = $compile(svg)(scope);
             cnv.html(sch);

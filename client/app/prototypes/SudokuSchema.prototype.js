@@ -117,6 +117,11 @@ angular.module('sudokuApp')
         checkResult: function() {
           $rootScope.$broadcast('need-tobe-solved', this);
         },
+        isDoing: function() {
+          return !!_.find(this.cells, function(c){
+            return !c.isEmpty() && !c.fixed;
+          });
+        },
         isComplete:function() {
           return !_.find(this.cells, function(c){
             return c.isEmpty();
