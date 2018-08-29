@@ -32,23 +32,28 @@ angular.module('sudokuApp')
       AlgorithmTry.prototype = new Algorithm('try');
 
       AlgorithmTry.prototype.apply = function (schema, forks, best) {
-        var self = this;
+        const self = this;
         if (!forks) return false;
-        var cells = [];
-        var twins = schema.getTwins();
+        const cells = [];
+        const twins = schema.getTwins();
+        if (schema.isCorrupted()) return false;
+        // RICERCA le celle con minor numero di valori possibili
+        // se trova dei gemelli usa quelli
         if (twins.length) {
           cells.push(twins[0].cells[0]);
         } else {
-          cells.push(schema.getMinAvailable());
+          const mincell = schema.getMinAvailable();
+          if (!mincell) return false;
+          cells.push(mincell);
         }
 
         if (cells.length) {
           cells.forEach(function(cell) {
             forksOnCell(self, schema, cell, forks);
           });
-          var last = forks.pop();
-          var cell = cells[cells.length-1];
-          var index = schema.cells.indexOf(cell);
+          const last = forks.pop();
+          const cell = cells[cells.length-1];
+          const index = schema.cells.indexOf(cell);
           cell.setValue(last.cells[index].value);
           schema.log(self, cell);
           return true;

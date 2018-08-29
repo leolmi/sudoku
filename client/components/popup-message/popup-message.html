@@ -1,6 +1,9 @@
 <div class="popup-message" ng-if="state.active">
   <div class="popup-message-title">{{state.title}}</div>
   <div class="popup-message-text">{{state.text}}</div>
+  <div class="popup-message-input" ng-if="state.input">
+    <textarea type="text" ng-model="state.data"></textarea>
+  </div>
   <div class="popup-message-toolbar">
     <button type="button" class="btn" ng-class="b.style"
             ng-repeat="b in state.buttons" ng-click="b.click($event)">{{b.caption}}</button>

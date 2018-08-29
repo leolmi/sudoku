@@ -27,6 +27,13 @@ schema {
         //  fill: #111 !Important;
         //}
       }
+      &.pencil {
+        .schema-cell {
+          &.current {
+            fill: rgba(250, 104, 0, 0.7) !Important;
+          }
+        }
+      }
       .schema-cell-text {
         pointer-events: none;
         fill: none;
@@ -38,6 +45,11 @@ schema {
           //stroke: #000;
           stroke: none !Important;
           fill: #111 !important;
+        }
+      }
+      .pencil {
+        text {
+          pointer-events: none;
         }
       }
       .schema-group {

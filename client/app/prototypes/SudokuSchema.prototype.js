@@ -13,8 +13,12 @@ angular.module('sudokuApp')
         for (var i = 0; i < (schema.dimension*schema.dimension); i++) {
           schema.cells.push(new SudokuSchemaCell(schema.dimension, i));
         }
+        if (((schema._original||{}).cells||[]).length === schema.cells.length) {
+          schema.cells.forEach((c, i) => c.pencil = _.clone(schema._original.cells[i].pencil));
+        }
 
         // costruisce i gruppi
+        schema.groups = [];
         schema.rank = Math.sqrt(schema.dimension);
         for (var a = 0; a < schema.dimension; a++) {
           const row = new SudokuSchemaGroup('R', a);
@@ -41,7 +45,7 @@ angular.module('sudokuApp')
       }
 
       function resolve(schema) {
-        schema.report = _.map(schema.report, function(rl){
+        schema.report = _.map(schema.report, (rl) => {
           const line = new SudokuReportLine(rl);
           line.load(rl);
           return line;
@@ -49,33 +53,52 @@ angular.module('sudokuApp')
       }
 
       function _cellGroups(schema, origin) {
-        return _.filter(schema.groups, function (g) {
-          return g.cells.indexOf(origin) > -1;
-        })
+        return _.filter(schema.groups, (g) => g.cells.indexOf(origin) > -1);
       }
 
       function _getValues(groups, cell) {
         if (!groups) return [];
         if (!_.isArray(groups)) groups = [groups];
         let v = [];
-        groups.forEach(function(g){
-          v = _.union(v, g.getValues(cell));
-        });
+        groups.forEach((g) => v = _.union(v, g.getValues(cell)));
         return v;
       }
 
       function _refreshAvailables(schema, origin) {
         const groups = origin ? _cellGroups(schema, origin) : schema.groups;
-        groups.forEach(function (g) {
-          g.resetAvailables();
-        });
-        schema.cells.forEach(function(c){
+        groups.forEach((g) => g.resetAvailables());
+        schema.cells.forEach((c) => {
           const gs = _cellGroups(schema, c);
           const values = _getValues(gs, c);
           c.removeAvailables(values);
           c.error = !c.fixed && ((!c.value && c.available.length<=0) ||
             (!!c.value && values.indexOf(c.value)>-1));
         });
+      }
+
+      function _toValues(txt) {
+        const values = [];
+        const re = /(\d)/gm;
+        let m;
+        while ((m = re.exec(txt)) !== null) {
+          if (m.index === re.lastIndex) {
+            re.lastIndex++;
+          }
+          values.push((m[0]>0) ? parseInt(m[0]) : 0);
+        }
+        return values;
+      }
+
+      function _values(schema) {
+        return _.map(schema.cells||[], (c) => c.fixed ? c.value : 0).join('');
+      }
+
+      function _reset(schema) {
+        schema.values = _values(schema);
+        schema.report = [];
+        schema.meta = {};
+        schema.name = null;
+        schema.score = 0;
       }
 
       const SudokuSchema = function(options) {
@@ -88,8 +111,11 @@ angular.module('sudokuApp')
         self.cells = [];
         self.groups = [];
         self.report = [];
+        self.meta = {};
         self.disableLog = false;
+        self.pencil = false;
         if (_.isObject(options)) {
+          self._original = options;
           _.extend(self, options);
           resolve(self);
         }
@@ -100,9 +126,10 @@ angular.module('sudokuApp')
           self.parse(self.values);
         }
         $rootScope.$on('cell-value-changed', function(e, cell){
-          if (self.cells.indexOf(cell)>-1) _refreshAvailables(self, cell);
+          if (!!cell && self.cells.indexOf(cell)>-1) _refreshAvailables(self, cell);
         });
         _refreshAvailables(self);
+        self.values = _values(self);
       };
       SudokuSchema.prototype = {
         symmetry: 'none',
@@ -113,9 +140,16 @@ angular.module('sudokuApp')
         cells: null,
         groups: null,
         report: null,
+        meta: null,
         disableLog: false,
+        pencil: false,
+        fixed: '',
         checkResult: function() {
           $rootScope.$broadcast('need-tobe-solved', this);
+        },
+        checkName: function() {
+          if (this.name) return;
+          this.name = this.dimension + 'x' + this.dimension + ' ' + this.fixedCount() + 'num (' + (this.score?this.score:'nn') + ')';
         },
         isDoing: function() {
           return !!_.find(this.cells, function(c){
@@ -144,71 +178,64 @@ angular.module('sudokuApp')
         },
         parse:function(txt) {
           const self = this;
-          const v = [];
-          const re = /(\d)/gm;
-          let m;
-          while ((m = re.exec(txt)) !== null) {
-            if (m.index === re.lastIndex) {
-              re.lastIndex++;
-            }
-            v.push((m[0]>0) ? parseInt(m[0]) : 0);
-          }
-          v.forEach(function(v, i){
+          _toValues(txt).forEach((v, i) => {
             self.cells[i].value = v;
             self.cells[i].fixed = !!v;
           });
+          _reset(self);
+          $rootScope.$broadcast('cell-value-changed');
         },
         // Salva una riga di log
         // alg: algoritmo, cell: cella interessata, avl:valori esclusi
         log: function(alg, cell, avl) {
-          let self = this;
+          const self = this;
           if (self.disableLog) return;
           self.report.push(new SudokuReportLine(alg, self, cell, avl));
         },
         //converte in valori fissi quelli presenti
         fix: function() {
-          this.cells.forEach(function(c){
+          const self = this;
+          self.cells.forEach((c) => {
             c.fixed = !!c.value;
+            c.available = [];
           });
+          _reset(self);
         },
         cloneBy: function(other) {
-          this.cells.forEach(function(c,i){
+          this.cells.forEach((c,i) => {
             c.value = other.cells[i].value;
             c.fixed = other.cells[i].fixed;
             c.available = _.clone(other.cells[i].available);
           });
-          this.report = _.map(other.report, function(l) {
-            return _.clone(l);
-          });
+          this.report = _.map(other.report, (l) => _.clone(l));
         },
         reset: function(all) {
           const self = this;
-          self.cells.forEach(function(c){
+          self.cells.forEach((c) => {
             if (!c.fixed || all) {
               c.value = 0;
               c.pencil = [];
               c.fixed = false;
             }
           });
+          if (all) _reset(self);
           _refreshAvailables(self);
+          $rootScope.$broadcast('cell-value-changed');
         },
         getScore: function() {
           const self = this;
           self.score = 'unknown';
           if (self.report.length) {
             self.score = 0;
-            self.report.forEach(function(l){
-              self.score += l.score;
-            });
+            self.report.forEach((l) => self.score += l.score);
           }
           return self.score;
         },
         // Restituisce la prima cella con il minor numero di valori possibili
         getMinAvailable: function() {
           let cell = undefined;
-          this.cells.forEach(function (c) {
-            if (!c.value && (!cell || cell.available.length > c.available.length))
-              cell = c;
+          this.cells.forEach((c) => {
+            if (!c.value && (!cell || (c.available.length > 0 && cell.available.length > c.available.length))) cell = c;
           });
           return cell;
         },
@@ -216,7 +243,7 @@ angular.module('sudokuApp')
         getTwins: function() {
           const self = this;
           const grouptwins = [];
-          self.groups.forEach(function(g) {
+          self.groups.forEach((g) => {
             const summary = g.getSummary(self);
             const g1 = _(summary)
               .filter(function(r){ return r.code === 2; })
@@ -229,22 +256,20 @@ angular.module('sudokuApp')
           const twins = [];
           if (grouptwins.length) {
             const ug = _(grouptwins)
-              .map(function(t) { return { hash: t[0].hash, twins: t }})
+              .map((t) => { return { hash: t[0].hash, twins: t }})
               .groupBy('hash')
               .value();
-            _.keys(ug).forEach(function(u){
-              const values = _.map(ug[u][0].twins, function(t) { return t.value; });
-              const hash = _.map(ug[u][0].twins[0].cells, function(c) { return ''+c.index; }).join();
+            _.keys(ug).forEach((u) => {
+              const values = _.map(ug[u][0].twins, (t) => t.value);
+              const hash = _.map(ug[u][0].twins[0].cells, (c) => ''+c.index).join();
               twins.push({ values:values, cells: ug[u][0].twins[0].cells, hash: hash});
             });
           }
 
           //integra i gemelli espliciti
           self.groups.forEach(function(g){
-            g.getTwins().forEach(function(gt){
-              if (!_.find(twins, function(t){ return t.hash===gt.hash; })) {
-                twins.push(gt);
-              }
+            g.getTwins().forEach((gt) => {
+              if (!_.find(twins, function(t){ return t.hash===gt.hash; })) twins.push(gt);
             });
           });
 
@@ -253,12 +278,13 @@ angular.module('sudokuApp')
         fixedCount: function() {
           return _.filter(this.cells, ['fixed', true]).length;
         },
+        valuesCount: function() {
+          return _.filter(this.cells, (c) => !!c.value && !c.fixed).length;
+        },
         // Restituisce tutti i gruppi che contengono tutte le celle in elenco
         getGroups: function(cells) {
           const self = this;
-          return _.filter(self.groups, function(g) {
-            return g.contains(cells);
-          });
+          return _.filter(self.groups, (g) => g.contains(cells));
         },
         checkValues: function(alg, cell, values) {
           const self = this;
@@ -270,11 +296,19 @@ angular.module('sudokuApp')
             return true;
           }
           return false;
+        },
+        keep: function(txt) {
+          const self = this;
+          _toValues(txt).forEach((v, i) => {
+            if (!self.cells[i].fixed) self.cells[i].value = v;
+          });
+          _refreshAvailables(self);
+          $rootScope.$broadcast('cell-value-changed');
         }
       };
 
       SudokuSchema.prototype.toString = function() {
-        return _.map(this.cells, function(c){ return c.value ? c.value : 0; }).join('');
+        return _.map(this.cells, (c) => c.value ? c.value : 0).join('');
       };
 
       return (SudokuSchema);

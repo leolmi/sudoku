@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('popupService', ['$q',
-    function($q) {
+  .factory('popupService', ['$q','$timeout',
+    function($q,$timeout) {
       const _state = {
+        toast: {},
         active: false,
         title: '',
         text: '',
@@ -53,7 +54,7 @@ angular.module('sudokuApp')
       function _exit_back(cb) {
         return function (b) {
           hide();
-          cb(b);
+          cb({source:b, data:_state.data});
         }
       }
 
@@ -63,6 +64,8 @@ angular.module('sudokuApp')
         if (!o.title&&!o.text) return console.error('Undefined popup!');
         _state.text = o.text;
         _state.title = o.title;
+        _state.data  = o.data;
+        _state.input  = !!o.input;
         _loadButtons(o);
         _popup.promise = $q(function(resolve, reject){
           _popup.resolve = _exit_back(resolve);
@@ -72,10 +75,30 @@ angular.module('sudokuApp')
         return _popup.promise;
       }
 
+      function _getText(o) {
+        if (_.isString(o)) return o;
+        if (_.isObject(o)) {
+          if (_.isString(o.data)) return o.data;
+          if (_.isString(o.message)) return o.message;
+        }
+        return o;
+      }
+
+      function toast(message, mode, delay) {
+        _state.toast.message = _getText(message);
+        _state.toast.mode = mode;
+        $timeout(function() {
+          _state.toast.message = '';
+          _state.toast.mode = '';
+        }, delay||3000);
+        if (mode === 'error') console.error(message);
+      }
+
       return {
         state: _state,
         hide: hide,
-        show: show
+        show: show,
+        toast: toast
       }
     }])
   .directive('popupMessage', ['popupService',

@@ -2,11 +2,28 @@
   height: 40px;
   line-height: 40px;
   margin-bottom: 20px; }
-  .sudoku-navbar .container > * {
-    display: inline-flex; }
-  .sudoku-navbar .sudoku-navbar-header .sudoku-navbar-brand {
-    font-size: 1.6em;
-    text-transform: uppercase; }
+  .sudoku-navbar .container {
+    overflow: hidden; }
+    .sudoku-navbar .container > * {
+      display: inline-flex; }
+  .sudoku-navbar .sudoku-navbar-header {
+    width: 100%; }
+    .sudoku-navbar .sudoku-navbar-header .sudoku-navbar-brand {
+      font-size: 1.6em;
+      text-transform: uppercase; }
+    .sudoku-navbar .sudoku-navbar-header .sudoku-navbar-toast {
+      padding: 0 20px;
+      margin-left: 20px;
+      color: #eee;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden; }
+      .sudoku-navbar .sudoku-navbar-header .sudoku-navbar-toast.toast-error {
+        background-color: #bb3e3e; }
+      .sudoku-navbar .sudoku-navbar-header .sudoku-navbar-toast.toast-success {
+        background-color: #3fbb3f; }
+      .sudoku-navbar .sudoku-navbar-header .sudoku-navbar-toast.toast-warning {
+        background-color: #bb7240; }
   .sudoku-navbar .sudoku-menu-button {
     float: right;
     line-height: 44px; }

@@ -17,4 +17,14 @@
       margin: 10px;
     }
   }
+  .popup-message-input {
+    margin: 40px auto 0;
+    > textarea {
+      width: 50vw;
+      min-width: 240px;
+      min-height: 30px;
+      max-height: 20vh;
+      font-family: monospace;
+    }
+  }
 }

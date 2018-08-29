@@ -6,14 +6,104 @@
   .editor-col {
     min-width: 500px;
   }
-  .schema-item {
-    width: 100%;
-    margin-left: 25px;
-    padding: 4px 10px;
-    font-variant: small-caps;
-    cursor: pointer;
-    &:hover {
-      background-color: rgba(250,250,205,.2);
+  .schemas-col-lg {
+    .schema-toolbar {
+      padding-left: 30px;
+      margin-bottom: 20px;
+      > .btn {
+        margin-bottom: 8px;
+      }
+    }
+    .schema-item {
+      width: 100%;
+      margin-left: 25px;
+      padding: 4px 10px;
+      font-variant: small-caps;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(250, 250, 205, .2);
+      }
+    }
+  }
+  .result-col {
+    overflow: hidden;
+    .progress {
+      background-color: rgba(100,100,100,.4) !Important;
+      margin-left: -15px;
+      .progress-bar {
+        color: #aaa;
+        background-color: #415effa1;
+      }
+    }
+    .schema-cert {
+      text-align: right;
+      .schema-diff {
+        line-height: 32px;
+        font-size: 1.3em;
+        font-variant: small-caps;
+        display: inline-flex;
+        vertical-align: text-bottom;
+      }
+      > i {
+        line-height: 48px;
+        &.success {
+          color: #28a745;
+        }
+        &.error {
+          color: #dc3545;
+        }
+      }
+    }
+    .schema-results {
+      height: 100px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+      .schema-items {
+        //word-wrap: break-word;
+        text-overflow: ellipsis;
+        .btn {
+          margin: 4px;
+        }
+        .schema-item {
+          font-family: monospace;
+        }
+      }
+    }
+    .schema-report {
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: calc(100vh - 208px);
+      height: -webkit-calc(100vh - 230px);
+      .schema-report-items {
+        position: absolute;
+        .schema-report-item {
+          background-color: rgba(200,200,200,.7);
+          color: #111;
+          padding: 2px 10px;
+          border-radius: 8px;
+          font-family: monospace;
+          margin-bottom: 2px;
+          cursor: pointer;
+          &.current {
+            background-color: rgba(64, 89, 250, 0.7) !important
+          }
+        }
+      }
     }
   }
 }
+
+.alg-singlecell { color: #40de7b; }
+.alg-intersections { color: #d2de1d; }
+.alg-twins { color: #debf21; }
+.alg-singlevalue { color: #de881e; }
+.alg-try { color: #de030d; }
+
+.diff-unknown {color:#ffffff}
+.diff-very-easy {color:#40de7b}
+.diff-easy {color:#d2de1d}
+.diff-middle {color:#debf21}
+.diff-hard {color:#de881e}
+.diff-very-hard {color:#de030d}

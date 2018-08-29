@@ -1,10 +1,27 @@
 <div class="row sudoku-editor">
-  <div class="col schemas-col">
+  <div class="col schemas-col-lg">
     <div class="row schema-find-row">
       <!-- ricerca schemi -->
     </div>
     <div class="row schemas-list">
       <!-- comandi schema (nuovo/cancella/risolvi) -->
+      <div class="schema-toolbar">
+        <button class="btn btn-sm btn-warning" ng-click="import()">import</button>
+        <button class="btn btn-sm btn-info" ng-click="print()">print</button>
+        <button class="btn btn-sm btn-danger" ng-click="solve()">solve</button>
+        <button class="btn btn-sm btn-warning" ng-click="clear()">clear</button>
+        <button class="btn btn-sm btn-secondary" ng-click="download()">download</button>
+        <button class="btn btn-sm btn-success" ng-click="recognize()">recognize</button>
+        <button class="btn btn-sm btn-warning" ng-click="pencilize()" ng-disabled="!(schemaState.x>=0)">availables</button>
+        <button class="btn btn-sm" ng-class="{'btn-success':state.report,'btn-light':!state.report}" ng-click="report()">report</button>
+        <button class="btn btn-sm" ng-class="{'btn-success':state.solutions,'btn-light':!state.solutions}" ng-click="solutions()">solutions</button>
+        <button class="btn btn-sm" ng-class="{'btn-success':schemaState.schema.pencil,'btn-light':!schemaState.schema.pencil}" ng-click="toggle()">pencil</button>
+        <button class="btn btn-sm" ng-class="{'btn-success':schemaState.drawing,'btn-light':!schemaState.drawing}" ng-click="drawing()">drawing</button>
+        <button ng-if="!!state.test" class="btn btn-sm btn-primary" ng-click="test()">TEST</button>
+        <div class="divider"></div>
+        <button class="btn btn-sm btn-danger" ng-disabled="!schemaState.schema.unique" ng-click="save()">save</button>
+      </div>
+      <input class="hidden" type="file" id="input-recognize" ng-model-instant onchange="angular.element(this).scope().setFile(this)">
       <!-- elenco schemi -->
       <div class="schema-item" ng-repeat="s in state.schemas" ng-click="open(s)">
         {{s.name}}
@@ -12,9 +29,47 @@
     </div>
   </div>
   <div class="col editor-col">
-    <schema options="schemaOptions""></schema>
+    <schema options="schemaOptions"></schema>
   </div>
-  <div class="col">
-    <!-- opzioni?? -->
+  <div class="col result-col">
+    <!-- opzioni -->
+    <div class="col">
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" ng-style="{width: schemaState.pos+'%'}" aria-valuemin="0" aria-valuemax="100">
+          {{schemaState.posDesc}}
+        </div>
+      </div>
+      <div class="row">
+        <div >
+          <div> score = {{schema.score||'?'}}</div>
+          <div> count = {{schema.fixedCount()||'?'}}</div>
+        </div>
+        <div class="col schema-cert">
+          <div class="schema-diff">{{(schema.meta.diff||{}).name}}</div>
+          <i class="fa fa-2x fa-circle" ng-class="'diff-' + ((schema.meta.diff||{}).code||(schema.meta.diff||{}).name||'unknown')"></i>
+          <i class="fa fa-2x fa-diamond success" title="unique solution" ng-if="schema.unique"></i>
+          <i class="fa fa-2x fa-exclamation-circle error" title="multiple solution" ng-if="!schema.unique"></i>
+        </div>
+      </div>
+      <!--<uib-progressbar animate="false" value="schemaState.pos" type="success"></uib-progressbar>-->
+    </div>
+    <!-- risultati -->
+    <div class="col schema-error" ng-if="!!state.result.error">{{result.error}}</div>
+    <div class="col schema-results">
+      <div ng-if="state.solutions" class="schema-items">
+        <button class="btn btn-sm" ng-repeat="s in state.result.solutions"
+                ng-class="{'btn-warning':s._values===schema._values}" ng-click="openSolution(s)">
+          solution <span ng-if="state.result.solutions.length>1">#{{($index+1)}}</span>
+        </button>
+      </div>
+    </div>
+    <div class="col schema-report">
+      <div ng-if="state.report" class="schema-report-items">
+        <div class="schema-report-item" ng-class="{'current':s.index === schemaState.index}"
+             ng-repeat="s in schema.report" ng-click="select(s)">
+          <span ng-class="'alg-' + s.alg"><i class="fa fa-circle"></i></span> {{($index+1)}}. {{s.toString()}}
+        </div>
+      </div>
+    </div>
   </div>
 </div>

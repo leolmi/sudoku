@@ -8,7 +8,7 @@ angular.module('sudokuApp')
         cell.available = cell.fixed ? [] : _.range(1, cell.dimension + 1);
       }
 
-      var SudokuSchemaCell = function(n, i) {
+      const SudokuSchemaCell = function(n, i) {
         this.dimension = n || 9;
         this.value = 0;
         this.index = i;
@@ -30,12 +30,29 @@ angular.module('sudokuApp')
         error: false,
         available:[],
         pencil:[],
-        setValue:function(v, force) {
-          if (this.fixed && !force) return;
-          const newv = (_.isNumber(v) && v > 0 && v <= this.dimension) ? v : 0;
-          if (newv === this.value) return;
-          this.value = newv;
-          resetAvailables(this);
+        setValue:function(v, force, pencil) {
+          const self = this;
+          if (self.fixed && !force) return;
+          const newv = (_.isNumber(v) && v > 0 && v <= self.dimension) ? v : 0;
+          if (!newv) {
+            self.pencil.splice(0);
+            self.value = newv;
+            resetAvailables(this);
+          }
+          else if (pencil) {
+            const pos = self.pencil.indexOf(newv);
+            if (pos>-1) {
+              self.pencil.splice(pos, 1);
+            } else {
+              self.pencil.push(newv);
+              self.value = 0;
+            }
+          } else {
+            if (newv === self.value) return;
+            self.value = newv;
+            self.pencil.splice(0);
+            resetAvailables(this);
+          }
           $rootScope.$broadcast('cell-value-changed', this);
         },
         resetAvailables: function() {
@@ -61,6 +78,15 @@ angular.module('sudokuApp')
         },
         toString: function() {
           return '{'+this.index+'} - '+this.available.join();
+        },
+        has: function(v) {
+          return this.pencil.indexOf(v) > -1;
+        },
+        pencilize: function() {
+          if (this.fixed) return;
+          this.pencil = _.clone(this.available);
+          this.value = 0;
+          $rootScope.$broadcast('cell-value-changed', this);
         }
       };
       return (SudokuSchemaCell);

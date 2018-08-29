@@ -14,5 +14,13 @@
     margin-top: 20px; }
     .popup-message .popup-message-toolbar > .btn {
       margin: 10px; }
+  .popup-message .popup-message-input {
+    margin: 40px auto 0; }
+    .popup-message .popup-message-input > textarea {
+      width: 50vw;
+      min-width: 240px;
+      min-height: 30px;
+      max-height: 20vh;
+      font-family: monospace; }
 
 /*# sourceMappingURL=popup-message.css.map */

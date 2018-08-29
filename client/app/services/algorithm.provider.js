@@ -3,7 +3,7 @@
 angular.module('sudokuApp')
   .provider('algorithms',
     function() {
-      var availableAlgorithms = [{
+      const _algorithms = [{
         name:'single cell',
         score: 1,
         proto: 'AlgorithmSingleCell',
@@ -30,9 +30,18 @@ angular.module('sudokuApp')
         active: true
       }];
 
+      const _scores = [
+        {name:'unknown', max:1, color:'#ffffff'},
+        {name:'very easy', code:'very-easy', max:80, color:'#40de7b'},
+        {name:'easy', max:100, color:'#d2de1d'},
+        {name:'middle', max:140, color:'#debf21'},
+        {name:'hard', max:200, color:'#de881e'},
+        {name:'very hard', code:'very-hard', max:100000, color:'#de030d'}];
+
       this.$get = function () {
         return {
-          availableAlgorithms: availableAlgorithms
+          availableAlgorithms: _algorithms,
+          scores: _scores
         };
       };
     });

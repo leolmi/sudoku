@@ -3,7 +3,7 @@
 angular.module('sudokuApp')
   .factory('util',[
     function() {
-      var _constants = {
+      const _constants = {
         symmetries:['none','total','polar','horizontal','vertical','diagonalNWSE','diagonalNESW'],
         scores:[
           {name:'unknown', max:1},
@@ -61,10 +61,88 @@ angular.module('sudokuApp')
         }
       }
 
+      function sanitize(o) {
+        if (!_.isObject(o)) return o;
+        let r = _.clone(o);
+        for (var pn in r) {
+          if (pn.indexOf('_') === 0 || pn.indexOf('$$') === 0 || _.isFunction(r[pn])) {
+            delete r[pn];
+          } else if (_.isArray(r[pn])) {
+            r[pn] = _.map(r[pn], function(i){
+              return sanitize(i);
+            });
+          } else if (_.isObject(r[pn])) {
+            r[pn] = sanitize(r[pn]);
+          }
+        }
+        return r;
+      }
+
+      function validateFileName(name) {
+        return (name||'file').replace(/[\\\/:\*\?"<>\|\s]/gi, '_');
+      }
+
+      /**
+       * Salva il file con il nome specificato
+       * @param {string} content
+       * @param {string} [filename]
+       * @param {string} [type]
+       */
+      function saveFile(content, filename, type) {
+        filename = validateFileName(filename || 'content.txt');
+        type = type || 'text/plain;charset=utf-8';
+        const file = new File([content], filename, {type: type});
+        saveAs(file);
+      }
+
+      function isJson(txt) {
+        return _.startsWith((txt||'').trim(), '{');
+      }
+
+      function toString(v, trim) {
+        if (_.isNaN(v) || _.isUndefined(v) || _.isNull(v)) return '';
+        if (_.isString(v)) return v;
+        if (v && _.isFunction(v.toString))
+          return v.toString();
+        return trim ? (''+v).trim() : ''+v;
+      }
+
+      /**
+       * Effettua la replace dei valori forniti tramite elenco o oggetto nella stringa
+       * @param {string} str
+       * @param {[]|object} args
+       * @param {object} [o]
+       */
+      function format(str, args, o) {
+        if (args && _.isArray(args)) {
+          args.forEach(function (v, i) {
+            const rgx = new RegExp('\\{' + i + '\\}', 'g');
+            str = str.replace(rgx, toString(v));
+          });
+        }
+        else if (args && _.isObject(args)) {
+          o = args;
+        }
+        if (o && _.isObject(o)) {
+          for(let pn in o) {
+            const rgx = new RegExp('\\{'+pn+'\\}', 'g');
+            str = str.replace(rgx, toString(o[pn]));
+          }
+        }
+        return str;
+      }
+
+
       return {
         constants: _constants,
-        guid:guid,
+        guid: guid,
+        sanitize: sanitize,
         safeApply: safeApply,
-        remove:remove
+        remove: remove,
+        validateFileName: validateFileName,
+        saveFile: saveFile,
+        isJson: isJson,
+        toString: toString,
+        format: format
       }
     }]);

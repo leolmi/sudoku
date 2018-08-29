@@ -1,44 +1,64 @@
 'use strict';
+const u = require('../api/utilities/util');
+const Schema = require('../api/schema/schema.model');
 
-var Schema = require('../api/schema/schema.model');
-Schema.find({}).remove(function() {
+Schema.deleteMany({}, function() {
   Schema.create({
-    name: '9x9 26num 24diff',
+    _id: u.hash('000080000049600010002010409306700020000000000020008304601020700090001250000070000'),
+    name: '9x9 26num (485)',
     symmetry: 'none',
     dimension: '9',
+    score: 485,
+    unique: true,
     x: false,
     values: '000080000049600010002010409306700020000000000020008304601020700090001250000070000'
   },{
-    name: '9x9 30num 35diff',
+    _id: u.hash('030000040900150800000039000790800520560000087028007014000980000007013008010000050'),
+    name: '9x9 30num (154)',
     symmetry: 'none',
     dimension: '9',
+    score: 154,
+    unique: true,
     x: false,
     values: '030000040900150800000039000790800520560000087028007014000980000007013008010000050'
   },{
-    name: '9x9 26num 41diff',
+    _id: u.hash('000002000040500700516000240000026000890000072000840000069000183003007020000100000'),
+    name: '9x9 26num (55)',
     symmetry: 'none',
     dimension: '9',
+    score: 55,
+    unique: true,
     x: false,
     values: '000002000040500700516000240000026000890000072000840000069000183003007020000100000'
   },{
-    name: '9x9 26num 39diff',
+    _id: u.hash('005030170073016000400900000300000060004000900020000003000009002000650390037020500'),
+    name: '9x9 26num (nn)',
     symmetry: 'none',
     dimension: '9',
+    score: 0,
+    unique: false,
     x: false,
     values: '005030170073016000400900000300000060004000900020000003000009002000650390037020500'
   },{
-    name: '9x9 29num 34diff',
+    _id: u.hash('000070008007200003630850090060000005200643001900000060050068012100002700700030000'),
+    name: '9x9 29num (270)',
     symmetry: 'none',
     dimension: '9',
+    score: 270,
+    unique: true,
     x: false,
     values: '000070008007200003630850090060000005200643001900000060050068012100002700700030000'
   },{
-    name: '9x9 26num 36diff',
+    _id: u.hash('000000000000096020007080035201068700003000500009450103830040200040910000000000000'),
+    name: '9x9 26num (63)',
     symmetry: 'none',
     dimension: '9',
+    score: 63,
+    unique: true,
     x: false,
     values: '000000000000096020007080035201068700003000500009450103830040200040910000000000000'
   }, function() {
       console.log('finished populating schemas');
   })
 });
+

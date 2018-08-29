@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('solver',['SudokuSchema','$injector','SolverOptions','algorithms','util','$rootScope','$timeout',
-    function(SudokuSchema,$injector,SolverOptions,algorithms,util,$rootScope,$timeout) {
+  .factory('solver',['SudokuSchema','$injector','SolverOptions','algorithms','util','$rootScope','$timeout','$q',
+    function(SudokuSchema,$injector,SolverOptions,algorithms,util,$rootScope,$timeout,$q) {
       const _state = {
         solving: false
       };
@@ -24,6 +24,10 @@ angular.module('sudokuApp')
         });
       }
 
+      function _calcDiff(schema) {
+        return _.find(algorithms.scores, (s) => s.max > (schema.score||0));
+      }
+
       /**
        * Risolve lo schema restituendo tutte le possibili soluzioni
        * @param schema
@@ -31,23 +35,46 @@ angular.module('sudokuApp')
        * @returns {*}
        */
       function solveAll(schema, options) {
-        if (!schema || _state.solving) return false;
-        _state.solving = true;
-        options = new SolverOptions(options);
-        _state.error = null;
-        schema.report = [];
-        schema.disableLog = false;
-        const schemas = [schema];
-        let result = undefined;
-        try {
-          result = solveSchemas(schemas, options);
-          _state.solving = false;
-        }
-        catch(err) {
-          _state.error = err;
-          _state.solving = false;
-        }
-        return result;
+        return $q(function (resolve, reject) {
+          if (!schema) return reject('Undefined schema!');
+          if (_state.solving) return reject('Solver busy!');
+          schema.unique = false;
+          delete schema.meta.diff;
+          _state.solving = true;
+          options = new SolverOptions(options);
+          _state.error = null;
+          schema.report = [];
+          schema.disableLog = false;
+          let wschema;
+          if (options.hidden) {
+            wschema = new SudokuSchema();
+            wschema.cloneBy(schema);
+          } else {
+            wschema = schema;
+          }
+          const schemas = [wschema];
+          let result = undefined;
+          try {
+            result = _solveSchemas(schemas, options);
+            _state.solving = false;
+            schema._result = {solutions: result || []};
+            if (result.length === 1) {
+              if (!options.hidden) schema.keep(result[0]._values);
+              schema.report = _.clone(result[0].report);
+              schema.meta.score = schema.getScore();
+              schema.meta.numCount = result[0].fixedCount();
+              schema.unique = true;
+              schema.meta.diff = _calcDiff(schema);
+              schema.checkName();
+            }
+            resolve(result);
+          } catch (err) {
+            _state.error = err;
+            _state.solving = false;
+            schema._result = {error: err};
+            reject(err);
+          }
+        });
       }
 
       /**
@@ -56,14 +83,17 @@ angular.module('sudokuApp')
        * @param [options]
        * @returns {Array}
        */
-      function solveSchemas(schemas, options) {
+      function _solveSchemas(schemas, options) {
         do {
           const forks = [];
           schemas.forEach(function (s) {
             //cerca il primo algoritmo che riesce a risolvere
-            _.find(_algorithms, function (alg) {
-              return (forks.length > options.maxSchemas || (alg.active && alg.apply(s, forks)));
-            });
+            if (!s.isComplete()) {
+              _.find(_algorithms, function (alg) {
+                return (forks.length > options.maxSchemas || (alg.active && alg.apply(s, forks)));
+              });
+            }
+            s._values = s.toString();
           });
           if (forks.length > 0)
             Array.prototype.push.apply(schemas, forks);
@@ -73,19 +103,9 @@ angular.module('sudokuApp')
         } while (schemas.length < options.maxSchemas && !areComplete(schemas));
 
         //restituisce l'elenco degli schemi completati
-        const solutions = _(schemas)
+        return _(schemas)
           .each(function (s) {s.getScore();})
-          .filter(function (s) {return s.isComplete();})
-          .groupBy(function (s) {return s.toString();})
-          .value();
-
-        const result = [];
-        _.keys(solutions).forEach(function (s) {
-          result.push(_(solutions[s])
-            .sortBy('score')
-            .first());
-        });
-        return result;
+          .filter(function (s) {return s.isComplete();});
       }
 
       /**
@@ -102,17 +122,13 @@ angular.module('sudokuApp')
 
 
       $rootScope.$on('need-tobe-solved', function(e, schema) {
-        $timeout(function() {
-          const clone = new SudokuSchema();
-          clone.cloneBy(schema);
-          const res = solveAll(clone);
-          if (res && res.length === 1) {
-            schema.report = res[0].report;
-          } else {
+        solveAll(schema, {hidden:true})
+          .then(function(res){
+            schema.report = (res||[])[0]||{}.report||[];
+          }, function(err){
             schema.report = [];
             schema.log();
-          }
-        },0);
+          });
       });
 
 

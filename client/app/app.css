@@ -83,6 +83,10 @@ sudoku-background .sudoku-background {
   background-position: center;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 .min-80 {min-width: 80px;}
 
 .blur {
@@ -91,4 +95,9 @@ sudoku-background .sudoku-background {
 
 .view-container {
   overflow: hidden;
+}
+
+div.divider {
+  display: inline-flex;
+  width: 20px;
 }

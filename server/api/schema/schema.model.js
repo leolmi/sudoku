@@ -5,6 +5,8 @@ const mongoose = require('mongoose'),
 
 const SchemaReportLine = new Schema({
   alg: String,
+  x: Number,
+  y: Number,
   score: Number,
   value: Number,
   values: [Number],
@@ -12,12 +14,14 @@ const SchemaReportLine = new Schema({
 });
 
 const SchemaSchema = new Schema({
+  _id: Number,
   name: String,
   symmetry: String,
   dimension: Number,
   x: Boolean,
   values: String,
   score: Number,
+  unique: Boolean,
   report: [SchemaReportLine],
   meta: Schema.Types.Mixed
 });

@@ -1,8 +1,9 @@
 <div class="sudoku-navbar">
   <div class="container">
-    <div class="sudoku-navbar-header">
+    <div class="sudoku-navbar-header row">
       <div class="sudoku-navbar-brand">sudoku</div>
+      <div ng-if="toast.message" class="col sudoku-navbar-toast" ng-class="'toast-' + toast.mode">{{toast.message}}</div>
     </div>
-    <i class="sudoku-menu-button fa fa-2x as-button" ng-class="{'fa-bars':!state.menu, 'fa-times':!!state.menu}" ng-click="toggle()"></i>
+    <!--<i class="sudoku-menu-button fa fa-2x as-button" ng-class="{'fa-bars':!state.menu, 'fa-times':!!state.menu}" ng-click="toggle()"></i>-->
   </div>
 </div>

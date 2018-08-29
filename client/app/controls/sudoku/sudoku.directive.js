@@ -114,11 +114,6 @@ angular.module('sudokuApp')
               }
             }
           });
-
-          $rootScope.$on('cell-value-changed', function(e, data){
-            //scope.complete = scope.schema.isComplete();
-            //scope.corrupted = scope.schema.isCorrupted();
-          })
         }
       }
     }]);

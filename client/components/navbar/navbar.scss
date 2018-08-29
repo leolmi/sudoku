@@ -2,17 +2,39 @@
   height: 40px;
   line-height: 40px;
   margin-bottom: 20px;
-  .container > * {
-    display: inline-flex;
+  .container {
+    overflow: hidden;
+    > * {
+      display: inline-flex;
+    }
   }
   .sudoku-navbar-header {
+    width: 100%;
     .sudoku-navbar-brand {
       font-size: 1.6em;
       text-transform: uppercase;
+    }
+    .sudoku-navbar-toast {
+      padding: 0 20px;
+      margin-left: 20px;
+      color: #eee;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      &.toast-error {
+        background-color: #bb3e3e;
+      }
+      &.toast-success {
+        background-color: #3fbb3f;
+      }
+      &.toast-warning {
+        background-color: #bb7240;
+      }
     }
   }
   .sudoku-menu-button {
     float: right;
     line-height: 44px;
   }
+
 }

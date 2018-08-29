@@ -7,9 +7,9 @@
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-var express = require('express');
-var mongoose = require('mongoose');
-var config = require('./config/environment');
+const express = require('express');
+const mongoose = require('mongoose');
+const config = require('./config/environment');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -18,9 +18,9 @@ mongoose.connect(config.mongo.uri, config.mongo.options);
 if(config.seedDB) { require('./config/seed'); }
 
 // Setup server
-var app = express();
-var server = require('http').createServer(app);
-var socketio = require('socket.io')(server, {
+const app = express();
+const server = require('http').createServer(app);
+const socketio = require('socket.io')(server, {
   serveClient: (config.env !== 'production'),
   path: '/socket.io-client'
 });

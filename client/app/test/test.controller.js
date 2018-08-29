@@ -64,11 +64,13 @@ angular.module('sudokuApp')
       };
 
       $scope.solveAll = function() {
-        const result = solver.solveAll($scope.schema);
-        if (result && result.length > 0)
-          $scope.schema.cloneBy(result[0]);
-        if (result && result.length > 1)
-          alert('Lo schema non è a soluzione unica!! (trovate ' + result.length + ' soluzioni)');
+        solver.solveAll($scope.schema)
+          .then(function(res){
+            if ((res||[]).length>0) $scope.schema.cloneBy(res[0]);
+            if ((res||[]).length>1) alert('Lo schema non è a soluzione unica!! (trovate ' + res.length + ' soluzioni)');
+          }, function(err){
+            alert(err);
+          });
         resetSelection();
       };
 

@@ -9,9 +9,10 @@ const router = express.Router();
 
 router.get('/', controller.index);
 router.get('/:id', controller.show);
-router.put('/', auth.isAuthenticated(), controller.save);
-router.patch('/', auth.isAuthenticated(), controller.save);
+router.post('/', controller.save);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.post('/generate', controller.generate);
+router.post('/recognize', controller.recognize);
+
 
 module.exports = router;

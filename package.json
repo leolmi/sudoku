@@ -22,6 +22,7 @@
     "express": "~4.0.0",
     "express-jwt": "^0.1.3",
     "express-session": "~1.0.2",
+    "file-saver": "^1.3.8",
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "json3": "^3.3.2",
@@ -41,7 +42,8 @@
     "serve-favicon": "~2.0.1",
     "socket.io": "^1.0.6",
     "socket.io-client": "^1.0.6",
-    "socketio-jwt": "^2.0.2"
+    "socketio-jwt": "^2.0.2",
+    "tesseract.js": "^1.0.10"
   },
   "devDependencies": {},
   "engines": {
@@ -49,6 +51,7 @@
   },
   "scripts": {
     "start": "node server/app.js",
+    "poststart": "start http://localhost:9000",
     "mongo": "mongod -dbpath C://mongodb/data"
   },
   "private": true

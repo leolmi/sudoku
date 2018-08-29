@@ -2,13 +2,102 @@
   height: 80vh; }
 .sudoku-editor .editor-col {
   min-width: 500px; }
-.sudoku-editor .schema-item {
+.sudoku-editor .schemas-col-lg .schema-toolbar {
+  padding-left: 30px;
+  margin-bottom: 20px; }
+  .sudoku-editor .schemas-col-lg .schema-toolbar > .btn {
+    margin-bottom: 8px; }
+.sudoku-editor .schemas-col-lg .schema-item {
   width: 100%;
   margin-left: 25px;
   padding: 4px 10px;
   font-variant: small-caps;
   cursor: pointer; }
-  .sudoku-editor .schema-item:hover {
+  .sudoku-editor .schemas-col-lg .schema-item:hover {
     background-color: rgba(250, 250, 205, 0.2); }
+.sudoku-editor .result-col {
+  overflow: hidden; }
+  .sudoku-editor .result-col .progress {
+    background-color: rgba(100, 100, 100, 0.4) !important;
+    margin-left: -15px; }
+    .sudoku-editor .result-col .progress .progress-bar {
+      color: #aaa;
+      background-color: #415effa1; }
+  .sudoku-editor .result-col .schema-cert {
+    text-align: right; }
+    .sudoku-editor .result-col .schema-cert .schema-diff {
+      line-height: 32px;
+      font-size: 1.3em;
+      font-variant: small-caps;
+      display: inline-flex;
+      vertical-align: text-bottom; }
+    .sudoku-editor .result-col .schema-cert > i {
+      line-height: 48px; }
+      .sudoku-editor .result-col .schema-cert > i.success {
+        color: #28a745; }
+      .sudoku-editor .result-col .schema-cert > i.error {
+        color: #dc3545; }
+  .sudoku-editor .result-col .schema-results {
+    height: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative; }
+    .sudoku-editor .result-col .schema-results .schema-items {
+      text-overflow: ellipsis; }
+      .sudoku-editor .result-col .schema-results .schema-items .btn {
+        margin: 4px; }
+      .sudoku-editor .result-col .schema-results .schema-items .schema-item {
+        font-family: monospace; }
+  .sudoku-editor .result-col .schema-report {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: calc(100vh - 208px);
+    height: -webkit-calc(100vh - 230px); }
+    .sudoku-editor .result-col .schema-report .schema-report-items {
+      position: absolute; }
+      .sudoku-editor .result-col .schema-report .schema-report-items .schema-report-item {
+        background-color: rgba(200, 200, 200, 0.7);
+        color: #111;
+        padding: 2px 10px;
+        border-radius: 8px;
+        font-family: monospace;
+        margin-bottom: 2px;
+        cursor: pointer; }
+        .sudoku-editor .result-col .schema-report .schema-report-items .schema-report-item.current {
+          background-color: rgba(64, 89, 250, 0.7) !important; }
+
+.alg-singlecell {
+  color: #40de7b; }
+
+.alg-intersections {
+  color: #d2de1d; }
+
+.alg-twins {
+  color: #debf21; }
+
+.alg-singlevalue {
+  color: #de881e; }
+
+.alg-try {
+  color: #de030d; }
+
+.diff-unknown {
+  color: #ffffff; }
+
+.diff-very-easy {
+  color: #40de7b; }
+
+.diff-easy {
+  color: #d2de1d; }
+
+.diff-middle {
+  color: #debf21; }
+
+.diff-hard {
+  color: #de881e; }
+
+.diff-very-hard {
+  color: #de030d; }
 
 /*# sourceMappingURL=editor.css.map */

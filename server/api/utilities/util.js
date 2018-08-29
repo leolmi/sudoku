@@ -115,6 +115,7 @@ exports.log = log;
 
 const create = function(schema, req, res, cb) {
   cb = cb || noop;
+  console.log('CREATE OBJECT:', req.body);
   schema.create(req.body, function(err, obj) {
     if(err) { return error(res, err); }
     return created(res, obj, cb);
@@ -207,7 +208,7 @@ exports.destroy = function(schema, req, res, cb) {
   schema.findById(req.params.id, function (err, obj) {
     if(err) { return error(res, err); }
     if(!obj) { return notfound(res); }
-    obj.remove(function(err) {
+    schema.deleteOne({_id:obj._id}, function(err) {
       if(err) { return error(res, err); }
       return deleted(res, obj, cb);
     });
@@ -228,4 +229,15 @@ exports.index = function(schema, req, res) {
     if(err) { return error(res, err); }
     return ok(res, objs);
   });
+};
+
+exports.hash = function(str) {
+  let hash = 0, i, chr;
+  if (str.length === 0) return hash;
+  for (i = 0; i < str.length; i++) {
+    chr   = str.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0;
+  }
+  return hash;
 };

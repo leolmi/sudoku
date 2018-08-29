@@ -8,7 +8,7 @@ angular.module('sudokuApp')
        * @param info
        * @constructor
        */
-      var AlgorithmSingleValue = function(info) {
+      const AlgorithmSingleValue = function(info) {
         if (info)
           _.extend(this, info);
       };
@@ -16,9 +16,9 @@ angular.module('sudokuApp')
       AlgorithmSingleValue.prototype = new Algorithm('singlevalue');
 
       AlgorithmSingleValue.prototype.apply = function(schema, forks) {
-        var self = this;
+        const self = this;
         return _.find(schema.cells, function (c) {
-          var result = (c.available.length == 1 && !c.value);
+          const result = (c.available.length === 1 && !c.value);
           if (result) {
             c.setValue(c.available[0]);
             schema.log(self, c);

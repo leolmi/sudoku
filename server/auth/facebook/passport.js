@@ -10,8 +10,7 @@ exports.setup = function (User, config) {
     function(accessToken, refreshToken, profile, done) {
       User.findOne({
         'facebook.id': profile.id
-      },
-      function(err, user) {
+      }, function(err, user) {
         if (err) {
           return done(err);
         }
