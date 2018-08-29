@@ -132,6 +132,16 @@ angular.module('sudokuApp')
         return str;
       }
 
+       function hash(txt) {
+        let hash = 0, i, chr;
+        if (txt.length === 0) return hash;
+        for (i = 0; i < txt.length; i++) {
+          chr   = txt.charCodeAt(i);
+          hash  = ((hash << 5) - hash) + chr;
+          hash |= 0;
+        }
+        return hash;
+      }
 
       return {
         constants: _constants,
@@ -143,6 +153,7 @@ angular.module('sudokuApp')
         saveFile: saveFile,
         isJson: isJson,
         toString: toString,
-        format: format
+        format: format,
+        hash: hash
       }
     }]);

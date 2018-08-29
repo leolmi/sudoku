@@ -38,12 +38,13 @@ angular.module('sudokuApp')
         return $q(function (resolve, reject) {
           if (!schema) return reject('Undefined schema!');
           if (_state.solving) return reject('Solver busy!');
+          schema.refreshAvailables();
           schema.unique = false;
           delete schema.meta.diff;
           _state.solving = true;
           options = new SolverOptions(options);
           _state.error = null;
-          schema.report = [];
+          schema.report.splice(0);
           schema.disableLog = false;
           let wschema;
           if (options.hidden) {

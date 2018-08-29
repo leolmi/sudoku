@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('SudokuSchema',['$rootScope','SudokuSchemaCell','SudokuSchemaGroup','SudokuReportLine',
-    function($rootScope, SudokuSchemaCell, SudokuSchemaGroup, SudokuReportLine) {
+  .factory('SudokuSchema',['$rootScope','SudokuSchemaCell','SudokuSchemaGroup','SudokuReportLine','util',
+    function($rootScope, SudokuSchemaCell, SudokuSchemaGroup, SudokuReportLine, util) {
       // function initValues(schema) {
       //   return new Array(schema.dimension*schema.dimension);
       // }
@@ -144,39 +144,41 @@ angular.module('sudokuApp')
         disableLog: false,
         pencil: false,
         fixed: '',
-        checkResult: function() {
+        checkResult() {
           $rootScope.$broadcast('need-tobe-solved', this);
         },
-        checkName: function() {
+        checkName() {
           if (this.name) return;
-          this.name = this.dimension + 'x' + this.dimension + ' ' + this.fixedCount() + 'num (' + (this.score?this.score:'nn') + ')';
+          const hash = util.hash(this.values);
+          this.name = this.dimension + 'x' + this.dimension + ' ' + this.fixedCount() +
+            'num (' + (this.score ? this.score : 'nn') + ') [' + hash + ']';
         },
-        isDoing: function() {
+        isDoing() {
           return !!_.find(this.cells, function(c){
             return !c.isEmpty() && !c.fixed;
           });
         },
-        isComplete:function() {
+        isComplete() {
           return !_.find(this.cells, function(c){
             return c.isEmpty();
           });
         },
-        isCorrupted:function() {
+        isCorrupted() {
           return !!_.find(this.cells, function (c) {
             return c.available.length < 1 && !c.value;
           });
         },
-        isCorreptedOrComplete: function() {
+        isCorreptedOrComplete() {
           return this.isComplete() || this.isCorrupted();
         },
-        validateCoord: function(x, y) {
+        validateCoord(x, y) {
           return (_.isNumber(x) && x>=0 && x<this.dimension &&
             _.isNumber(y) && y>=0 && y<this.dimension);
         },
-        cell: function(x,y) {
+        cell(x,y) {
           return this.cells[y*this.dimension + x];
         },
-        parse:function(txt) {
+        parse(txt) {
           const self = this;
           _toValues(txt).forEach((v, i) => {
             self.cells[i].value = v;
@@ -187,21 +189,24 @@ angular.module('sudokuApp')
         },
         // Salva una riga di log
         // alg: algoritmo, cell: cella interessata, avl:valori esclusi
-        log: function(alg, cell, avl) {
+        log(alg, cell, avl) {
           const self = this;
           if (self.disableLog) return;
           self.report.push(new SudokuReportLine(alg, self, cell, avl));
         },
         //converte in valori fissi quelli presenti
-        fix: function() {
+        fix() {
           const self = this;
           self.cells.forEach((c) => {
             c.fixed = !!c.value;
             c.available = [];
+            c.pencil = [];
           });
           _reset(self);
+          _refreshAvailables(self);
+          $rootScope.$broadcast('cell-value-changed');
         },
-        cloneBy: function(other) {
+        cloneBy(other) {
           this.cells.forEach((c,i) => {
             c.value = other.cells[i].value;
             c.fixed = other.cells[i].fixed;
@@ -209,7 +214,7 @@ angular.module('sudokuApp')
           });
           this.report = _.map(other.report, (l) => _.clone(l));
         },
-        reset: function(all) {
+        reset(all) {
           const self = this;
           self.cells.forEach((c) => {
             if (!c.fixed || all) {
@@ -222,7 +227,7 @@ angular.module('sudokuApp')
           _refreshAvailables(self);
           $rootScope.$broadcast('cell-value-changed');
         },
-        getScore: function() {
+        getScore() {
           const self = this;
           self.score = 'unknown';
           if (self.report.length) {
@@ -232,7 +237,7 @@ angular.module('sudokuApp')
           return self.score;
         },
         // Restituisce la prima cella con il minor numero di valori possibili
-        getMinAvailable: function() {
+        getMinAvailable() {
           let cell = undefined;
           this.cells.forEach((c) => {
             if (!c.value && (!cell || (c.available.length > 0 && cell.available.length > c.available.length))) cell = c;
@@ -240,7 +245,7 @@ angular.module('sudokuApp')
           return cell;
         },
         // Restituisce l'elenco delle coppie di celle gemelle
-        getTwins: function() {
+        getTwins() {
           const self = this;
           const grouptwins = [];
           self.groups.forEach((g) => {
@@ -275,18 +280,18 @@ angular.module('sudokuApp')
 
           return twins;
         },
-        fixedCount: function() {
+        fixedCount() {
           return _.filter(this.cells, ['fixed', true]).length;
         },
-        valuesCount: function() {
+        valuesCount() {
           return _.filter(this.cells, (c) => !!c.value && !c.fixed).length;
         },
         // Restituisce tutti i gruppi che contengono tutte le celle in elenco
-        getGroups: function(cells) {
+        getGroups(cells) {
           const self = this;
           return _.filter(self.groups, (g) => g.contains(cells));
         },
-        checkValues: function(alg, cell, values) {
+        checkValues(alg, cell, values) {
           const self = this;
           const avl = _.difference(cell.available, values);
           if (avl.length !== cell.available.length) {
@@ -297,13 +302,16 @@ angular.module('sudokuApp')
           }
           return false;
         },
-        keep: function(txt) {
+        keep(txt) {
           const self = this;
           _toValues(txt).forEach((v, i) => {
             if (!self.cells[i].fixed) self.cells[i].value = v;
           });
           _refreshAvailables(self);
           $rootScope.$broadcast('cell-value-changed');
+        },
+        refreshAvailables() {
+          _refreshAvailables(this);
         }
       };
 
