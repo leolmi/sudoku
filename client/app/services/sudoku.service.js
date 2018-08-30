@@ -6,17 +6,22 @@ angular.module('sudokuApp')
       const _state = {
         drawing: false,
         menu: false,
-        schema: new SudokuSchema('005030170073016000400900000300000060004000900020000003000009002000650390037020500')
+        schema: new SudokuSchema()
       };
 
       function _refreshPos() {
-        if (!_state.schema) return;
-        _state.schema._values = _state.schema.toString();
+        if (!_state.schema || _state.drawing) return;
+        // _state.schema._values = _state.schema.toString();
         const tot = _state.schema.dimension*_state.schema.dimension;
         const fixed = _state.schema.fixedCount();
         const values = _state.schema.valuesCount();
         _state.pos = ((values / (tot - fixed)) * 100).toFixed(0);
         _state.posDesc = values + ' su ' + (tot-fixed) + '  ('+_state.pos+'%)';
+      }
+
+      function _resetPos() {
+        _state.pos = null;
+        _state.posDesc = null;
       }
 
       function _safe(scope, cb) {
@@ -53,13 +58,34 @@ angular.module('sudokuApp')
             break;
         }
       }
+
+      function _checkDoing(o, cb) {
+        if (_state.schema.isDoing()) {
+          popupService.show({
+            title: o.title,
+            text: o.text || 'Current schema will be discard',
+            ok: 'OK',
+            cancel: 'Cancel'
+          }).then(function() {
+            cb();
+          });
+        } else {
+          cb();
+        }
+      }
+
+
       function toggle(scope) {
-        return util.safeApply(scope,() => {
+        _safe(scope,() => {
           if (!_state.drawing) {
-            _state.schema.reset(true);
-            _state.x = 0;
-            _state.y = 0;
-            _state.drawing = true;
+            _checkDoing({
+              title: 'Switch in drawing mode?'
+            }, () => {
+              _state.schema.reset(true);
+              select(0,0);
+              _resetPos();
+              _state.drawing = true;
+            });
           } else {
             _state.schema.fix();
             solver.solveAll(_state.schema, {hidden:true})
@@ -79,24 +105,18 @@ angular.module('sudokuApp')
 
       function _open(schema) {
         _state.schema = new SudokuSchema(schema);
-        solver.solveAll(_state.schema, {hidden:true});
-        _state.pos = 0;
+        if (!(_state.schema.report||[]).length)
+          solver.solveAll(_state.schema, {hidden:true});
+        _resetPos();
+        select();
       }
 
-
       function open(schema) {
-        if (_state.schema.isDoing()) {
-          popupService.show({
-            title: 'Open new schema?',
-            text: 'Current schema will be discard',
-            ok: 'OK',
-            cancel: 'Cancel'
-          }).then(function() {
-            _open(schema);
-          });
-        } else {
+        _checkDoing({
+          title: 'Open new schema?'
+        }, () => {
           _open(schema);
-        }
+        });
       }
 
       function cell() {

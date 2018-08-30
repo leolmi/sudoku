@@ -9,7 +9,7 @@ angular.module('sudokuApp')
         solutions: false,
         error: null,
         schemas: [],
-        result: {},
+        // result: {},
         test: false
       };
 
@@ -45,8 +45,8 @@ angular.module('sudokuApp')
         sudokuService.open(schema);
       };
 
-      $scope.openSolution = function(sol) {
-        sudokuService.state.schema.keep(sol._values);
+      $scope.toggleSolution = function(sol) {
+        sudokuService.state.schema.keep(sol);
       };
 
       $scope.select = function(item) {
@@ -94,7 +94,7 @@ angular.module('sudokuApp')
         method = method || 'readAsText';
         const r = new FileReader();
         r.onloadend = function (e) {
-          cb(e.target.result);
+          util.safeApply($scope, () => cb(e.target.result));
         };
         r.onerror = function (err) {
           popupService.toast(err, 'error');
@@ -117,15 +117,16 @@ angular.module('sudokuApp')
             }
           });
         } else if (/image\/.*/g.test(file.type)) {
-          _readFile(file, function(job){
-            const data = {fileData:new Uint8Array(job.result), fileName:file.name};
-            $http.post('api/schema/recognize', data)
-              .then(function (resp) {
-                _buildSchema(resp.data);
-              }, function (err) {
-                popupService.toast(err, 'error');
-              });
-          }, 'readAsArrayBuffer')
+          popupService.toast('Not implemented yet!', 'warning');
+          // _readFile(file, function(job){
+          //   const data = {fileData:new Uint8Array(job.result), fileName:file.name};
+          //   $http.post('api/schema/recognize', data)
+          //     .then(function (resp) {
+          //       _buildSchema(resp.data);
+          //     }, function (err) {
+          //       popupService.toast(err, 'error');
+          //     });
+          // }, 'readAsArrayBuffer')
         } else {
           popupService.toast('Unrecognize file or data!', 'error');
         }
@@ -179,12 +180,12 @@ angular.module('sudokuApp')
         sudokuService.reset($scope);
       };
 
-      $scope.$watch(function() { return (sudokuService.state.schema||{})._result }, function(r) {
-        $scope.state.result = r||{};
-      });
-
       $scope.$watch(function() { return sudokuService.state.schema }, function(s) {
         $scope.schema = s;
+      });
+
+      $scope.$watch(function() { return (sudokuService.state.schema||{}).name }, function(s) {
+        document.title =  sudokuService.state.schema?sudokuService.state.schema.getTitle():'sdk';
       });
 
       _refreshList();

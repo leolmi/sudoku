@@ -35,6 +35,7 @@ angular.module('sudokuApp')
        * @returns {*}
        */
       function solveAll(schema, options) {
+        console.log('SOLVE SCHEMA: %s', schema.name);
         return $q(function (resolve, reject) {
           if (!schema) return reject('Undefined schema!');
           if (_state.solving) return reject('Solver busy!');
@@ -46,13 +47,9 @@ angular.module('sudokuApp')
           _state.error = null;
           schema.report.splice(0);
           schema.disableLog = false;
-          let wschema;
-          if (options.hidden) {
-            wschema = new SudokuSchema();
-            wschema.cloneBy(schema);
-          } else {
-            wschema = schema;
-          }
+          const wschema = new SudokuSchema();
+          wschema.cloneBy(schema);
+          wschema.reset();
           const schemas = [wschema];
           let result = undefined;
           try {
@@ -67,6 +64,9 @@ angular.module('sudokuApp')
               schema.unique = true;
               schema.meta.diff = _calcDiff(schema);
               schema.checkName();
+            } else if (result.length > 1) {
+              if (!options.hidden) schema.keep(result[0]._values);
+              schema.report = _.clone(result[0].report);
             }
             resolve(result);
           } catch (err) {

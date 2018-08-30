@@ -13,12 +13,13 @@
         <button class="btn btn-sm btn-secondary" ng-click="download()">download</button>
         <button class="btn btn-sm btn-success" ng-click="recognize()">recognize</button>
         <button class="btn btn-sm btn-warning" ng-click="pencilize()" ng-disabled="!(schemaState.x>=0)">availables</button>
+        <br>
         <button class="btn btn-sm" ng-class="{'btn-success':state.report,'btn-light':!state.report}" ng-click="report()">report</button>
-        <button class="btn btn-sm" ng-class="{'btn-success':state.solutions,'btn-light':!state.solutions}" ng-click="solutions()">solutions</button>
+        <button class="btn btn-sm" ng-class="{'btn-success':state.solutions,'btn-light':!state.solutions}" ng-click="solutions()">solutions ({{schemaState.schema._result.solutions.length}})</button>
         <button class="btn btn-sm" ng-class="{'btn-success':schemaState.schema.pencil,'btn-light':!schemaState.schema.pencil}" ng-click="toggle()">pencil</button>
-        <button class="btn btn-sm" ng-class="{'btn-success':schemaState.drawing,'btn-light':!schemaState.drawing}" ng-click="drawing()">drawing</button>
+        <button class="btn btn-sm" ng-class="{'btn-warning':schemaState.drawing,'btn-light':!schemaState.drawing}" ng-click="drawing()">drawing</button>
+        <br>
         <button ng-if="!!state.test" class="btn btn-sm btn-primary" ng-click="test()">TEST</button>
-        <div class="divider"></div>
         <button class="btn btn-sm btn-danger" ng-disabled="!schemaState.schema.unique" ng-click="save()">save</button>
       </div>
       <input class="hidden" type="file" id="input-recognize" ng-model-instant onchange="angular.element(this).scope().setFile(this)">
@@ -57,9 +58,9 @@
     <div class="col schema-error" ng-if="!!state.result.error">{{result.error}}</div>
     <div class="col schema-results">
       <div ng-if="state.solutions" class="schema-items">
-        <button class="btn btn-sm" ng-repeat="s in state.result.solutions"
-                ng-class="{'btn-warning':s._values===schema._values}" ng-click="openSolution(s)">
-          solution <span ng-if="state.result.solutions.length>1">#{{($index+1)}}</span>
+        <button class="btn btn-sm" ng-repeat="s in schemaState.schema._result.solutions"
+                ng-class="{'btn-warning':s._values===schema._values}" ng-click="toggleSolution(s)">
+          solution <span ng-if="schemaState.schema._result.solutions.length>1">#{{($index+1)}}</span>
         </button>
       </div>
     </div>

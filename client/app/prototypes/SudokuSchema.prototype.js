@@ -14,7 +14,10 @@ angular.module('sudokuApp')
           schema.cells.push(new SudokuSchemaCell(schema.dimension, i));
         }
         if (((schema._original||{}).cells||[]).length === schema.cells.length) {
-          schema.cells.forEach((c, i) => c.pencil = _.clone(schema._original.cells[i].pencil));
+          schema.cells.forEach((c, i) => {
+            c.pencil = _.clone(schema._original.cells[i].pencil);
+            // if (!c.fixed) c.value = schema._original.cells[i].value;  <<< viene cancellato dal successivo _reset
+          });
         }
 
         // costruisce i gruppi
@@ -96,6 +99,7 @@ angular.module('sudokuApp')
       function _reset(schema) {
         schema.values = _values(schema);
         schema.report = [];
+        schema._result = {};
         schema.meta = {};
         schema.name = null;
         schema.score = 0;
@@ -127,6 +131,7 @@ angular.module('sudokuApp')
         }
         $rootScope.$on('cell-value-changed', function(e, cell){
           if (!!cell && self.cells.indexOf(cell)>-1) _refreshAvailables(self, cell);
+          self._values = self.toString();
         });
         _refreshAvailables(self);
         self.values = _values(self);
@@ -152,6 +157,9 @@ angular.module('sudokuApp')
           const hash = util.hash(this.values);
           this.name = this.dimension + 'x' + this.dimension + ' ' + this.fixedCount() +
             'num (' + (this.score ? this.score : 'nn') + ') [' + hash + ']';
+        },
+        getTitle() {
+          return this.dimension + 'x' + this.dimension + ' ' + this.fixedCount() + 'n ' + ((((this.meta||{}).diff||{}).name||'').toUpperCase()||'?')
         },
         isDoing() {
           return !!_.find(this.cells, function(c){
@@ -216,6 +224,7 @@ angular.module('sudokuApp')
         },
         reset(all) {
           const self = this;
+          console.log('CLEAR (%s)', !!all, self);
           self.cells.forEach((c) => {
             if (!c.fixed || all) {
               c.value = 0;
@@ -302,12 +311,19 @@ angular.module('sudokuApp')
           }
           return false;
         },
-        keep(txt) {
+        keep(arg) {
           const self = this;
-          _toValues(txt).forEach((v, i) => {
-            if (!self.cells[i].fixed) self.cells[i].value = v;
-          });
-          _refreshAvailables(self);
+          const txt = _.isString(arg) ? arg : arg._values;
+          if (txt === self._values) {
+            self.reset();
+          } else {
+            _toValues(txt).forEach((v, i) => {
+              if (!self.cells[i].fixed) self.cells[i].value = v;
+              self.cells[i].pencil.splice(0);
+            });
+            _refreshAvailables(self);
+            if (_.isObject(arg)) self.report = _.clone(arg.report || []) || [];
+          }
           $rootScope.$broadcast('cell-value-changed');
         },
         refreshAvailables() {

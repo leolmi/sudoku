@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA;;GAEG;AACH,UAOC;EANC,WAAW,EAAE,sBAAsB;EACnC,GAAG,EAAE,oEAAoE;EACzE,GAAG,EAAE,qYAGyG;AAGhH,IAAK;EACH,gBAAgB,EAAE,KAAK;EACvB,KAAK,EAAE,IAAI;;AAGb,OAAQ;EACN,UAAU,EAAE,MAAM",
+"sources": ["ocr.scss"],
+"names": [],
+"file": "ocr.css"
+}
