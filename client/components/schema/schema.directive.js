@@ -8,7 +8,8 @@ angular.module('sudokuApp')
         templateUrl: 'components/schema/schema.html',
         scope: {options:'='},
         link: function (scope, ele) {
-          scope.state = sudokuService.state;
+          const provider = (scope.options||{}).provider||sudokuService;
+          scope.state = provider.state;
 
           function _defer(action) {
             $timeout(action, 100);
@@ -17,22 +18,22 @@ angular.module('sudokuApp')
           function _setValue(e, value) {
             e.preventDefault();
             _defer(function() {
-              sudokuService.setValue(value);
-              if (scope.state.drawing) sudokuService.move(4);
+              provider.setValue(value);
+              if (scope.state.drawing && !scope.state.lockAutoMove) provider.move(4);
             });
           }
 
           function _move(e, code) {
             e.preventDefault();
             _defer(function() {
-              sudokuService.move(code||(e.which - 37));
+              provider.move(code||(e.which - 37));
             });
           }
 
           function _toggle(e) {
             e.preventDefault();
             return _defer(function() {
-              sudokuService.toggle();
+              provider.toggle();
             });
           }
 
@@ -64,13 +65,13 @@ angular.module('sudokuApp')
                   // TODO...
                   return;
                 case 65:  // 'A' availables for cell
-                  return sudokuService.cell().pencilize();
+                  return provider.cell().pencilize();
                 case 67:  // 'C' clear all
-                  return sudokuService.reset(scope);
+                  return provider.reset(scope);
                 case 82:  // 'R' resolve
-                  return sudokuService.solve(scope);
+                  return provider.solve(scope);
                 case 83:  // 'S' schema
-                  return sudokuService.toggle(scope);
+                  return provider.toggle(scope);
               }
             }
           }
@@ -79,7 +80,7 @@ angular.module('sudokuApp')
 
           function _rebuild() {
             const PRC = .01;
-            const info = sudokuService.state.schema;
+            const info = provider.state.schema;
             const cnv = $('#schema-canvas', ele);
             const size = Math.min(cnv.width(),cnv.height());
             const dh = size / info.dimension;
@@ -116,7 +117,8 @@ angular.module('sudokuApp')
                 }
                 content += '<rect class="schema-cell" ng-mouseenter="cellEnter('+x+','+y+')" ng-click="cellClick('+x+','+y+')" '+
                   'ng-class="{\'current\':'+x+'===state.x&&'+y+'===state.y, \'error\':!!state.schema.cell('+x+','+y+').error,'+
-                  ' \'fixed\':!!state.schema.cell('+x+','+y+').fixed}" x="'+(rx+dwb)+'" y="'+(ry+dhb)+'" width="'+(dw-2*dwb)+'" height="'+(dh-2*dhb)+'"></rect>' +
+                  ' \'fixed\':!!state.schema.cell('+x+','+y+').fixed, \'locked\':!!state.schema.cell('+x+','+y+').locked}" ' +
+                  'x="'+(rx+dwb)+'" y="'+(ry+dhb)+'" width="'+(dw-2*dwb)+'" height="'+(dh-2*dhb)+'"></rect>' +
                   '<text class="schema-cell-text" ng-class="{\'fixed\':!!state.schema.cell('+x+','+y+').fixed}" x="'+(rx+dw/2)+'" y="'+(ry+6*dhb+dh/2)+'" text-anchor="middle"'+
                   'dominant-baseline="middle" style="font-size:'+fs+'px;">{{state.schema.cell('+x+','+y+').text()}}</text>' +
                   '<g style="font-size:'+fss+'px" class="pencil" dominant-baseline="middle" text-anchor="middle">' + pencil + '</g>';
@@ -131,12 +133,12 @@ angular.module('sudokuApp')
 
           scope.cellClick = function(x,y){
             $(ele).focus();
-            sudokuService.select(x,y);
-            console.log('CURRENT CELL',sudokuService.cell());
+            const cell = provider.select(x, y, null, 'click');
+            console.log('CURRENT CELL', cell);
           };
 
           scope.cellEnter = function(x,y){
-            if (sudokuService.state.drawing) sudokuService.select(x,y);
+            if (provider.state.drawing) provider.select(x,y);
           };
 
 

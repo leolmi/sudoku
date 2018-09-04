@@ -7,6 +7,22 @@ angular.module('sudokuApp')
       //   return new Array(schema.dimension*schema.dimension);
       // }
 
+      function _toString(schema) {
+        let result = '';
+        schema.cells.forEach((c, i) => {
+          const pos = i+1;
+          result += (c.value ? c.value : ' ');
+          if (pos > 25 && pos % 27 === 0) {
+            if (pos<80) result += '\n-----------\n'
+          } else if (pos > 7 && pos % 9 === 0) {
+            result += '\n';
+          } else if (pos > 1 && pos % 3 === 0) {
+            result += '|';
+          }
+        });
+        return result;
+      }
+
       function build(schema) {
         // costruisce le celle
         schema.cells = [];
@@ -328,11 +344,19 @@ angular.module('sudokuApp')
         },
         refreshAvailables() {
           _refreshAvailables(this);
+        },
+        lock(txt) {
+          const self = this;
+          if (!txt) {
+            self.cells.forEach((c) => c.lock(false));
+          } else {
+            _toValues(txt).forEach((v, i) => self.cells[i].lock(!!v));
+          }
         }
       };
 
-      SudokuSchema.prototype.toString = function() {
-        return _.map(this.cells, (c) => c.value ? c.value : 0).join('');
+      SudokuSchema.prototype.toString = function(advanced) {
+        return advanced ? _toString(this) : _.map(this.cells, (c) => c.value ? c.value : 0).join('');
       };
 
       return (SudokuSchema);

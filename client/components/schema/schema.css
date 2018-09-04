@@ -19,6 +19,8 @@ schema {
           fill: rgba(64, 89, 250, 0.7) !important; }
         schema .schema-container #schema-canvas .schema-cell.error {
           fill: rgba(250, 0, 1, 0.7) !important; }
+        schema .schema-container #schema-canvas .schema-cell.locked {
+          fill: rgba(250, 250, 250, 0.9) !important; }
       schema .schema-container #schema-canvas.pencil .schema-cell.current {
         fill: rgba(250, 104, 0, 0.7) !important; }
       schema .schema-container #schema-canvas .schema-cell-text {

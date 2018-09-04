@@ -4,6 +4,8 @@ angular.module('sudokuApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
+  'ngAnimate',
+  'ngTouch',
   'btford.socket-io',
   'ui.router',
   'ui.router.state.events',

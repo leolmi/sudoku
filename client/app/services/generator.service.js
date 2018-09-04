@@ -1,75 +1,26 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('generator',['GeneratorOptions','SudokuSchema','solver','$timeout',
-    function(GeneratorOptions, SudokuSchema, solver, $timeout) {
-      var _options = new GeneratorOptions();
-      var _state = {
+  .factory('generator',['$rootScope','GeneratorOptions','SudokuSchema','solver','$timeout',
+    function($rootScope,EngineOptions, SudokuSchema, solver, $timeout) {
+      const _options = new EngineOptions();
+      const _state = {
+        minCount: 20,
+        maxCount: 40,
         running: false,
         stop: false,
         schemas: []
       };
-      var _running = {};
-
-      /**
-       * Restituisce uno dei valori in elenco in modo randomico
-       * @param array
-       * @returns {*}
-         */
-      function getRamndomValue(array) {
-        if (_.isArray(array)) return 0;
-        var n = array.length;
-        var rIndex = Math.floor((Math.random() * n) + 1);
-        return array[rIndex];
-      }
-
-      /**
-       * Restituisce la collezione di celle secondo
-       * la simmetria scelta e a partire dalla cella passata
-       * @param schema
-       * @param cell
-       * @param symmetry
-         * @returns {*[]}
-         */
-      function getSymmetrycCells(schema, cell, symmetry) {
-        var cells = [cell], x, y;
-        switch (symmetry) {
-          case 'total': //(horizontal + vertical)
-            x = cell.dimension - cell.x;
-            if (x != cell.x)
-              cells.push(schema.cells[cell.y * cell.dimension + x]);
-            y = cell.dimension - cell.y;
-            if (y != cell.y)
-              cells.push(schema.cells[y * cell.dimension + cell.x]);
-            if (x != cell.x && y != cell.y)
-              cells.push(schema.cells[y * cell.dimension + x]);
-            break;
-          case 'polar':
-            cells.push(schema.cells[cell.x * cell.dimension + cell.y]);
-            break;
-          case 'horizontal':  //asse di simmetria verticale
-            x = cell.dimension - cell.x;
-            if (x != cell.x)
-              cells.push(schema.cells[cell.y * cell.dimension + x]);
-            break;
-          case 'vertical':  //asse di simmetria orizzontale
-            y = cell.dimension - cell.y;
-            if (y != cell.y)
-              cells.push(schema.cells[y * cell.dimension + cell.x]);
-            break;
-          case 'diagonalNWSE': //  asse di simmetria /
-            if (cell.x != cell.y)
-              cells.push(schema.cells[cell.y * cell.dimension + cell.x]);
-            break;
-          case 'diagonalNESW': //  asse di simmetria \
-            x = cell.dimension - cell.x;
-            y = cell.dimension - cell.y;
-            if (x != y)
-              cells.push(schema.cells[y * cell.dimension + x]);
-            break;
+      const _constants = {
+        stops: {
+          manual: 'manual',
+          found: 'found',
+          after: 'after',
+          time: 'time'
         }
-        return cells;
-      }
+      };
+      let _running = {};
+
 
       /**
        * Veri
@@ -122,8 +73,27 @@ angular.module('sudokuApp')
         }
       }
 
+
+
+      function validate() {
+        if (_state.running) return 'Generator is working!';
+        const fixed = _.filter(_state.schema.cells, (c) => !!c.value).length;
+        if (fixed !== _options.fixedValues) return 'Wrong number of values!';
+        if (fixed < _state.minCount) return 'Values under minimun (' + _state.minCount + ')!';
+        if (fixed > _state.maxCount) return 'Values up to maximum (' + _state.maxCount + ')!';
+
+
+      }
+
+      function stop() {
+        _state.stop = true;
+      }
+
+
       function run() {
-        if (_state.running) return;
+        _state.error = validate();
+        if (_state.error) return;
+
         _state.running = true;
         _state.log = [];
         _running = {
@@ -132,7 +102,7 @@ angular.module('sudokuApp')
           schemas: 0,
           geometry: false
         };
-        var end = false;
+        let end = false;
 
         do {
           _running.schema = new SudokuSchema();
@@ -149,7 +119,7 @@ angular.module('sudokuApp')
           //risolve lo schema
           //TODO: .....
 
-          var result = solver.solveAll(_running.schema);
+          const result = solver.solveAll(_running.schema);
           handleResult(result);
 
           end = isOnEnd();
@@ -180,13 +150,14 @@ angular.module('sudokuApp')
 
       }
 
-      function stop() {
-        _state.stop = true;
-      }
+
+
 
       return {
+        constants: _constants,
         options: _options,
         state: _state,
+        validate: validate,
         run: run,
         stop: stop
       }

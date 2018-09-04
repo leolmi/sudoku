@@ -1,0 +1,19 @@
+.sudoku-engine .box-schema schema {
+  height: 100%; }
+.sudoku-engine .input-fixed {
+  position: relative; }
+  .sudoku-engine .input-fixed .current-fixed {
+    position: absolute;
+    right: 44px;
+    top: 0;
+    color: lightcoral; }
+.sudoku-engine .box-toolbar {
+  height: 200px;
+  padding: 80px; }
+.sudoku-engine .error {
+  padding: 10px;
+  background-color: #9c2c37;
+  border-radius: 20px;
+  color: #ddd; }
+
+/*# sourceMappingURL=engine.css.map */

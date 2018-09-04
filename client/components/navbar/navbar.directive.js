@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .directive('sudokuNavBar', ['sudokuService','popupService',
-    function(sudokuService,popupService) {
+  .directive('sudokuNavBar', ['sudokuService','popupService','$state',
+    function(sudokuService, popupService, $state) {
       return {
         restrict: "E",
         templateUrl: 'components/navbar/navbar.html',
@@ -10,9 +10,13 @@ angular.module('sudokuApp')
         link: function (scope) {
           scope.state = sudokuService.state;
           scope.toast = popupService.state.toast;
+
           scope.toggle = function() {
-            scope.state.menu = !scope.state.menu;
+            scope.engine = ($state.current.name !== 'engine');
+            (scope.engine) ? $state.go('engine') : $state.go('editor');
           };
+
+          scope.engine = (location.pathname === '/engine');
         }
       }
     }]);

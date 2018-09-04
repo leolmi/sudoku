@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .factory('GeneratorOptions',[
+  .factory('EngineOptions',[
     function() {
-      var GeneratorOptions = function(info) {
+      const EngineOptions = function(info) {
         this.type = '9x9';
         this.fixedValues = 28;
         this.useCurrent = false;
         this.oneSchemaOnGeometry = true;
+        this.useTry = true;
         this.uniqueSolution = true;
         this.symmetry = 'none';
         this.enhancementCycles = 100;
@@ -19,12 +20,13 @@ angular.module('sudokuApp')
         if (info)
           _.extend(this, info);
       };
-      GeneratorOptions.prototype = {
+      EngineOptions.prototype = {
         type: '9x9',
         fixedValues: 28,
         useCurrent: false,
         oneSchemaOnGeometry: true,
         uniqueSolution: true,
+        useTry: true,
         symmetry: 'none',
         enhancementCycles: 100,
         difficulty: 'unknown',
@@ -33,5 +35,6 @@ angular.module('sudokuApp')
           number: 10
         }
       };
-      return (GeneratorOptions);
+
+      return (EngineOptions);
     }]);

@@ -10,7 +10,7 @@ angular.module('sudokuApp')
         error: null,
         schemas: [],
         // result: {},
-        test: false
+        // test: true
       };
 
       $scope.schemaOptions = {};
@@ -152,7 +152,8 @@ angular.module('sudokuApp')
       };
 
       $scope.test = function() {
-        ///
+        // const str = sudokuService.state.schema.toString(true);
+        // console.log(str);
       };
 
       $scope.toggle = function() {

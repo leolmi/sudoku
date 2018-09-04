@@ -9,7 +9,8 @@
     }
   }
   .sudoku-navbar-header {
-    width: 100%;
+    width: calc(100% - 20px);
+    width: -webkit-calc(100% - 20px);
     .sudoku-navbar-brand {
       font-size: 1.6em;
       text-transform: uppercase;

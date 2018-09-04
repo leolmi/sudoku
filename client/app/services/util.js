@@ -143,6 +143,12 @@ angular.module('sudokuApp')
         return hash;
       }
 
+      function objToArray(o) {
+        const list = [];
+        for(var s in o) list.push(s);
+        return list;
+      }
+
       return {
         constants: _constants,
         guid: guid,
@@ -154,6 +160,7 @@ angular.module('sudokuApp')
         isJson: isJson,
         toString: toString,
         format: format,
-        hash: hash
+        hash: hash,
+        objToArray: objToArray
       }
     }]);

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sudokuApp')
-  .controller('TestCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema','solver','util','generator','storage',
-    function ($scope, $http, socket, $rootScope, SudokuSchema, solver, util, generator, storage) {
+  .controller('TestCtrl', ['$scope','$http','socket','$rootScope', 'SudokuSchema','solver','util','storage',
+    function ($scope, $http, socket, $rootScope, SudokuSchema, solver, util, storage) {
 
       $scope.buttons = [{
         icon:'fa-th',
@@ -124,23 +124,23 @@ angular.module('sudokuApp')
       }];
 
       $scope.runGenerator = function() {
-        generator.run();
+        //generator.run();
       };
 
       $scope.stopGenerator = function() {
-        generator.stop();
+        //generator.stop();
       };
 
       $scope.generatorButtons = [{
         style:'fa-play-circle',
         tooltip: 'Avvia',
-        action: $scope.runGenerator,
-        disabled: function() { return generator.state.running; }
+        action: $scope.runGenerator
+        //disabled: function() { return generator.state.running; }
       },{
         style:'fa-stop',
         tooltip: 'Interrompi',
-        action: $scope.stopGenerator,
-        disabled: function() { return !generator.state.running; }
+        action: $scope.stopGenerator
+        //disabled: function() { return !generator.state.running; }
       }];
 
 

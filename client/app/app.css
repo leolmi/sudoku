@@ -1,61 +1,54 @@
-
 /**
  * Bootstrap Fonts
  */
 @font-face {
-    font-family: 'Glyphicons Halflings';
-    src: url('node_modules/bootstrap/fonts/glyphicons-halflings-regular.eot');
-    src: url('node_modules/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
-    url('ode_modules/bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'),
-    url('node_modules/bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
-    url('node_modules/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
-}
-
+  font-family: 'Glyphicons Halflings';
+  src: url("node_modules/bootstrap/fonts/glyphicons-halflings-regular.eot");
+  src: url("node_modules/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"),
+  url("ode_modules/bootstrap/fonts/glyphicons-halflings-regular.woff") format("woff"),
+  url("node_modules/bootstrap/fonts/glyphicons-halflings-regular.ttf") format("truetype"),
+  url("node_modules/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
 /**
  *Font Awesome Fonts
  */
 @font-face {
-    font-family: 'FontAwesome';
-    src: url('node_modules/font-awesome/fonts/fontawesome-webfont.eot?v=4.7.0');
-    src: url('node_modules/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),
-    url('node_modules/font-awesome/fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'),
-    url('node_modules/font-awesome/fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),
-    url('node_modules/font-awesome/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
+  font-family: 'FontAwesome';
+  src: url("node_modules/font-awesome/fonts/fontawesome-webfont.eot?v=4.7.0");
+  src: url("node_modules/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format("embedded-opentype"),
+  url("node_modules/font-awesome/fonts/fontawesome-webfont.woff?v=4.7.0") format("woff"),
+  url("node_modules/font-awesome/fonts/fontawesome-webfont.ttf?v=4.7.0") format("truetype"),
+  url("node_modules/font-awesome/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format("svg");
+  font-weight: normal;
+  font-style: normal; }
 body {
   background-color: #222;
   color: #999;
-}
-
+  min-height: 100vh;
+  min-width: 100vw; }
 
 .browsehappy {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
-}
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0; }
 
 .as-button {
   cursor: pointer;
   -webkit-transition: all .5s;
-  transition: all .5s;
-}
+  transition: all .5s; }
+
 .as-button:focus {
-  outline: none;
-}
+  outline: none; }
+
 .as-button:hover {
-  color: #ddd;
-}
+  color: #ddd; }
+
 .as-button.checked {
-  color: yellowgreen;
-}
+  color: yellowgreen; }
+
 .as-button[disabled] {
-  color:#666;
-  pointer-events: none;
-}
+  color: #666;
+  pointer-events: none; }
 
 .top-gradient {
   position: fixed;
@@ -70,8 +63,8 @@ sudoku-background {
   z-index: -1;
   width: 100vw;
   height: 100vh;
-  position: absolute;
-}
+  position: absolute; }
+
 sudoku-background .sudoku-background {
   width: 100vw;
   height: 100vh;
@@ -80,24 +73,37 @@ sudoku-background .sudoku-background {
   -o-background-size: cover;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
-}
+  background-position: center; }
 
 .hidden {
-  visibility: hidden;
-}
+  visibility: hidden; }
 
-.min-80 {min-width: 80px;}
+.min-80 {
+  min-width: 80px; }
 
 .blur {
-  filter: blur(8px);
-}
+  filter: blur(8px); }
 
 .view-container {
-  overflow: hidden;
-}
+  /*overflow: hidden;*/ }
 
 div.divider {
   display: inline-flex;
-  width: 20px;
-}
+  width: 20px; }
+
+form.compact .form-group {
+  min-height: 32px;
+  line-height: 32px;
+  margin-bottom: 2px; }
+  form.compact .form-group input[type='checkbox'] {
+    min-height: 32px;
+    margin-top: 0; }
+  form.compact .form-group .col-form-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 32px;
+    padding: 0 !Important;
+    max-width: 120px; }
+
+/*# sourceMappingURL=app.css.map */

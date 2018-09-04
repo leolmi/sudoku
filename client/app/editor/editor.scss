@@ -1,4 +1,6 @@
 .sudoku-editor {
+  overflow: hidden;
+  max-width: 100vw;
   schema {
     //width: 100vw;
     height: 80vh;

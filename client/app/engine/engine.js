@@ -6,6 +6,9 @@ angular.module('sudokuApp')
       .state('engine', {
         url: '/engine',
         templateUrl: 'app/engine/engine.html',
-        controller: 'EngineCtrl'
+        controller: 'EngineCtrl',
+        data: {
+          image: 2
+        }
       });
   });

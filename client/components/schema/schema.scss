@@ -23,6 +23,9 @@ schema {
         &.error {
           fill: rgba(250, 0, 1, 0.7) !Important;
         }
+        &.locked {
+          fill: rgba(250, 250, 250, 0.9) !Important;
+        }
         //&.fixed {
         //  fill: #111 !Important;
         //}

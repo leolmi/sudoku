@@ -4,6 +4,6 @@
       <div class="sudoku-navbar-brand">sudoku</div>
       <div ng-if="toast.message" class="col sudoku-navbar-toast" ng-class="'toast-' + toast.mode">{{toast.message}}</div>
     </div>
-    <!--<i class="sudoku-menu-button fa fa-2x as-button" ng-class="{'fa-bars':!state.menu, 'fa-times':!!state.menu}" ng-click="toggle()"></i>-->
+    <i class="sudoku-menu-button fa fa-2x as-button" ng-class="{'fa-cog':!engine, 'fa-th':engine}" ng-click="toggle()"></i>
   </div>
 </div>

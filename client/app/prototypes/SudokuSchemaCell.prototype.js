@@ -15,6 +15,7 @@ angular.module('sudokuApp')
         this.x = i % 9;
         this.y = parseInt(i / 9);
         this.fixed = false;
+        this.locked = false;
         this.error = false;
         this.available = [];
         this.pencil = [];
@@ -27,19 +28,19 @@ angular.module('sudokuApp')
         x: -1,
         y: -1,
         fixed: false,
+        locked: false,
         error: false,
         available:[],
         pencil:[],
-        setValue:function(v, force, pencil) {
+        setValue(v, force, pencil) {
           const self = this;
           if (self.fixed && !force) return;
-          const newv = (_.isNumber(v) && v > 0 && v <= self.dimension) ? v : 0;
+          const newv = !!force ? v : ((_.isNumber(v) && v > 0 && v <= self.dimension) ? v : 0);
           if (!newv) {
             self.pencil.splice(0);
             self.value = newv;
             resetAvailables(this);
-          }
-          else if (pencil) {
+          } else if (pencil) {
             const pos = self.pencil.indexOf(newv);
             if (pos>-1) {
               self.pencil.splice(pos, 1);
@@ -55,10 +56,10 @@ angular.module('sudokuApp')
           }
           $rootScope.$broadcast('cell-value-changed', this);
         },
-        resetAvailables: function() {
+        resetAvailables() {
           resetAvailables(this);
         },
-        removeAvailables:function(values) {
+        removeAvailables(values) {
           if (this.value) {
             this.available = [];
           } else {
@@ -67,25 +68,32 @@ angular.module('sudokuApp')
             this.available = _.difference(this.available, values);
           }
         },
-        isEmpty: function() {
+        isEmpty() {
           return !this.value;
         },
-        isTwin: function(cell) {
+        isTwin(cell) {
           return !_.difference(this.available, cell.available).length;
         },
-        text: function() {
+        text() {
           return ''+(this.value||'');
         },
-        toString: function() {
+        toString() {
           return '{'+this.index+'} - '+this.available.join();
         },
-        has: function(v) {
+        has(v) {
           return this.pencil.indexOf(v) > -1;
         },
-        pencilize: function() {
+        pencilize() {
           if (this.fixed) return;
           this.pencil = _.clone(this.available);
           this.value = 0;
+          $rootScope.$broadcast('cell-value-changed', this);
+        },
+        lock(lock) {
+          this.locked = !!lock;
+          this.value = 0;
+          this.available = [];
+          this.pencil = [];
           $rootScope.$broadcast('cell-value-changed', this);
         }
       };

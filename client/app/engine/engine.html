@@ -1,1 +1,109 @@
-<div>Engine...</div>
+<div class="container sudoku-engine">
+  <div class="row box-schema-options">
+    <!-- SCHEMA -->
+    <div class="col box-schema">
+      <schema options="schemaOptions"></schema>
+    </div>
+    <!-- OPTIONS -->
+    <div class="col box-options">
+      <form class="compact" ng-disabled="state.running.active">
+        <div class="form-group row">
+          <label class="col col-form-label">type</label>
+          <div class="col">{{state.options.type}}</div>
+        </div>
+        <div class="form-group row">
+          <label class="col col-form-label">fixed</label>
+          <div class="col input-fixed">
+            <input type="number" class="form-control form-control-sm" min="10" max="70" placeholder="fixed count"
+                   ng-model="state.options.fixedValues" ng-disabled="state.running.active">
+            <div class="current-fixed">{{state.fixed}}</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col col-form-label">Unique solution</div>
+          <div class="col">
+            <div class="form-check">
+              <input class="form-check-input form-control-sm" type="checkbox" ng-model="state.options.uniqueSolution"
+                     ng-disabled="state.running.active">
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col col-form-label">max cycles</label>
+          <div class="col">
+            <input type="number" class="form-control form-control-sm" min="10" max="100000" placeholder="enhancement cycles"
+                   ng-model="state.options.enhancementCycles" ng-disabled="state.running.active">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col col-form-label">symmetry</label>
+          <div class="col">
+            <div class="dropdown">
+              <button id="btn-symmetry" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false" ng-disabled="state.running.active">
+                {{state.options.symmetry}} <span class="caret"></span>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-symmetry">
+                <a class="dropdown-item" ng-repeat="s in symmetries" href="#" ng-class="{'active':s===state.options.symmetry}" ng-click="applySymmetry(s)">{{s}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col col-form-label">difficulty</label>
+          <div class="col">
+            <div class="dropdown">
+              <button id="btn-difficulty" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false" ng-disabled="state.running.active">
+                {{state.options.difficulty}} <span class="caret"></span>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-difficulty">
+                <a class="dropdown-item" ng-repeat="s in scores" href="#" ng-class="{'active':s.name===state.options.difficulty}" ng-click="applyDifficulty(s)">{{s.name}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col col-form-label">Use "try" algorithm</div>
+          <div class="col">
+            <div class="form-check">
+              <input class="form-check-input form-control-sm" type="checkbox" ng-model="state.options.useTry"
+                     ng-disabled="state.running.active">
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col col-form-label">One schema on geometry</div>
+          <div class="col">
+            <div class="form-check">
+              <input class="form-check-input form-control-sm" type="checkbox" ng-model="state.options.oneSchemaOnGeometry"
+                     ng-disabled="state.running.active">
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col col-form-label">stop mode</label>
+          <div class="col">
+            <div class="dropdown">
+              <button id="btn-stop" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false" ng-disabled="state.running.active">
+                {{state.options.stop.type}} <span class="caret"></span>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-stop">
+                <a class="dropdown-item" ng-repeat="s in stops" href="#" ng-class="{'active':s===state.options.stop.type}" ng-click="applyStop(s)">{{s}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row box-toolbar d-flex justify-content-center">
+    <button class="btn btn-danger" ng-click="start()" ng-if="!state.running.active" ng-disabled="state.error">Start</button>
+    <button class="btn btn-warning" ng-click="stop()" ng-if="!!state.running.active" ng-disabled="state.error">Stop</button>
+  </div>
+  <div class="row box-results d-flex justify-content-center">
+    <div class="error" ng-if="state.error">{{state.error}}</div>
+  </div>
+
+</div>
